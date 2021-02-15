@@ -23,11 +23,14 @@ const Login: React.FC<loginProps> = ({}) => {
         onSubmit={async (values, { setErrors }) => {
           const response = await login(values);
 
-          console.log(response);
           if (response.data?.login.errors) {
             setErrors(toErrorsMap(response.data.login.errors));
           } else if (response.data?.login.user) {
-            router.push("/");
+            if (typeof router.query.next === "string") {
+              await router.push(router.query.next);
+            }
+          } else {
+            router.replace("/");
           }
         }}
       >
@@ -37,6 +40,7 @@ const Login: React.FC<loginProps> = ({}) => {
               name="usernameOrEmail"
               label="使用者名稱或電子信箱"
               placeholder="輸入您的使用者名稱或電子信箱"
+              autoComplete="username"
               required={true}
             />
             <Box mt={2}>
@@ -44,13 +48,21 @@ const Login: React.FC<loginProps> = ({}) => {
                 name="password"
                 label="使用者密碼"
                 placeholder="使用者密碼長度不得低於 6 個字元"
+                autoComplete="current-password"
                 type="password"
                 required={true}
               />
             </Box>
             <Flex mt={2}>
               <NextLink href="/forgetPassword">
-                <Link ml="auto" fontSize="small" color="red" textDecoration="underline">忘記密碼</Link>
+                <Link
+                  ml="auto"
+                  fontSize="small"
+                  color="red"
+                  textDecoration="underline"
+                >
+                  忘記密碼
+                </Link>
               </NextLink>
             </Flex>
             <Box>
