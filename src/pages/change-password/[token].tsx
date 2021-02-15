@@ -1,4 +1,4 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
@@ -10,10 +10,12 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 import { toErrorsMap } from "../../utils/toErrorsMap";
 import { passwordExamination } from "../../utils/passwordExamination";
 import { useRouter } from "next/router";
+import { query } from "@urql/exchange-graphcache";
+import NextLink from "next/link";
 
 interface changePasswordProps {}
 
-const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
+const ChangePassword: NextPage<{ token: string }> = ({}) => {
   const router = useRouter();
   const [{ fetching }, changePassword] = useChangePasswordMutation();
   const [tokenExpried, setTokenExpired] = useState(false);
@@ -35,7 +37,11 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
             return;
           }
 
-          const response = await changePassword({ token, newPassword });
+          const response = await changePassword({
+            newPassword,
+            token:
+              typeof router.query.token === "string" ? router.query.token : "",
+          });
 
           if (response.data?.changePassword.errors) {
             const errorsMap = toErrorsMap(response.data.changePassword.errors);
@@ -44,7 +50,7 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
             }
             setErrors(errorsMap);
           } else if (response.data?.changePassword.user) {
-              router.push('/')
+            router.push("/");
           }
         }}
       >
@@ -56,6 +62,7 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
               placeholder="密碼長度不得低於 6 個字元"
               required={true}
               type="password"
+              disabled={tokenExpried}
               autoComplete="new-password"
             />
             <Box mt={4}>
@@ -65,37 +72,36 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
                 placeholder="請再次輸入密碼"
                 type="password"
                 autoComplete="new-password"
+                disabled={tokenExpried}
                 required={true}
               />
             </Box>
             <Box mt={4}>
               {tokenExpried ? (
-                <Box style={{ color: "red", fontSize: "small" }}>
-                  憑證已過期
-                </Box>
-              ) : null}
-            </Box>
-            <Box mt={4}>
-              <Button
-                type="submit"
-                isLoading={isSubmitting}
-                onChange={handleChange}
-                colorScheme="messenger"
-              >
-                提交
-              </Button>
+                <Flex fontSize="14px">
+                  <Box color="red">憑證已過期</Box>
+                  <Box color="blue" ml="auto" textDecoration="underline">
+                    <NextLink href="/forgetPassword">
+                      <Link>重新取得密碼重置憑證</Link>
+                    </NextLink>
+                  </Box>
+                </Flex>
+              ) : (
+                <Button
+                  type="submit"
+                  isLoading={isSubmitting}
+                  onChange={handleChange}
+                  colorScheme="messenger"
+                >
+                  提交
+                </Button>
+              )}
             </Box>
           </Form>
         )}
       </Formik>
     </Wrapper>
   );
-};
-
-ChangePassword.getInitialProps = ({ query }) => {
-  return {
-    token: query.token as string,
-  };
 };
 
 export default withUrqlClient(createUrqlClient)(ChangePassword as any);
