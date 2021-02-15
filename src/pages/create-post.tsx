@@ -3,24 +3,27 @@ import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import React from "react";
 import { InputField } from "../components/InputField";
-import { Wrapper } from "../components/Wrapper";
 import { useCreatePostMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { postInputExamination } from "../utils/postInputExamination";
 import { toErrorsMap } from "../utils/toErrorsMap";
 import { useRouter } from "next/router";
 import { Layout } from "../components/Layout";
+import { useIsAuth } from "../utils/useIsAuth";
 
 interface createPostProps {}
 
 const CreatePost: React.FC<createPostProps> = ({}) => {
   const router = useRouter();
-  const [{ fetching }, createPost] = useCreatePostMutation();
+  useIsAuth();
+  const [, createPost] = useCreatePostMutation();
   return (
     <Layout variant="small">
       <Formik
         initialValues={{ postTitle: "", postText: "" }}
         onSubmit={async (values, { setErrors }) => {
+          console.log(router);
+
           const { postTitle: title, postText: text } = values;
 
           const checkError = postInputExamination(title, text, {
@@ -35,8 +38,9 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
 
           const { error } = await createPost({ input: { title, text } });
           if (!error) {
-            router.push("/");
+            await router.replace('/');
           }
+          console.log(error);
         }}
       >
         {({ isSubmitting, handleChange }) => (
