@@ -1,4 +1,4 @@
-import { Box, Link } from "@chakra-ui/react";
+import { Box, Link, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React from "react";
 import { Layout } from "../components/Layout";
@@ -14,6 +14,7 @@ const Index = () => {
   const pause = isServer();
   const [{ data: meData }] = useMeQuery({ pause });
   const [{ data: postData, fetching: postsFetching }] = usePostsQuery({
+    variables: { limit: 5 },
     pause,
   });
 
@@ -23,26 +24,23 @@ const Index = () => {
     body = <Box>載入中···</Box>;
   } else if (meData && postData?.posts) {
     body = (
-      <Box id="posts" height="fit-content">
+      <Stack id="posts" height="fit-content" spacing={8}>
         {postData.posts.map((p) => (
           <Box key={p.id} mt={4}>
             <h1>{p.title}</h1>
             <p>{p.text}</p>
           </Box>
         ))}
-      </Box>
+      </Stack>
     );
   }
   return (
-    <Layout variant="small">
-      <Box my={2}>
-        <NextPage href="/create-post">
-          <Link style={{ color: "red", textDecoration: "underline" }}>
-            PO文
-          </Link>
-        </NextPage>
-      </Box>
+    <Layout variant="regular">
+      <NextPage href="/create-post">
+        <Link style={{ color: "red", textDecoration: "underline" }}>PO文</Link>
+      </NextPage>
       {body}
+      <br />
     </Layout>
   );
 };

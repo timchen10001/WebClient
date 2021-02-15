@@ -2,18 +2,15 @@ import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
 import { Wrapper } from "../../components/Wrapper";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { toErrorsMap } from "../../utils/toErrorsMap";
 import { passwordExamination } from "../../utils/passwordExamination";
-import { useRouter } from "next/router";
-import { query } from "@urql/exchange-graphcache";
-import NextLink from "next/link";
-
-interface changePasswordProps {}
+import { toErrorsMap } from "../../utils/toErrorsMap";
 
 const ChangePassword: NextPage<{ token: string }> = ({}) => {
   const router = useRouter();
@@ -89,8 +86,8 @@ const ChangePassword: NextPage<{ token: string }> = ({}) => {
               ) : (
                 <Button
                   type="submit"
-                  isLoading={isSubmitting}
                   onChange={handleChange}
+                  isLoading={isSubmitting}
                   colorScheme="messenger"
                 >
                   提交

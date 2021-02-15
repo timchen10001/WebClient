@@ -22,8 +22,6 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
       <Formik
         initialValues={{ postTitle: "", postText: "" }}
         onSubmit={async (values, { setErrors }) => {
-          console.log(router);
-
           const { postTitle: title, postText: text } = values;
 
           const checkError = postInputExamination(title, text, {
@@ -38,7 +36,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
 
           const { error } = await createPost({ input: { title, text } });
           if (!error) {
-            await router.replace('/');
+            await router.replace("/");
           }
           console.log(error);
         }}
