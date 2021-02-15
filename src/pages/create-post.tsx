@@ -33,9 +33,10 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
             return;
           }
 
-          await createPost({ input: { title, text } });
-          router.push('/');
-          //   if (response.data?.createPost)
+          const { error } = await createPost({ input: { title, text } });
+          if (!error) {
+            router.push("/");
+          }
         }}
       >
         {({ isSubmitting, handleChange }) => (
