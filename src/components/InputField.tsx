@@ -21,6 +21,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   size: _,
   textArea = false,
   required = false,
+  disabled = false,
   ...props
 }) => {
   let C: any = Input;
@@ -30,9 +31,18 @@ export const InputField: React.FC<InputFieldProps> = ({
 
   const [field, { error }] = useField(props);
   return (
-    <FormControl isInvalid={!!error} isRequired={required}>
+    <FormControl
+      isInvalid={!!error}
+      isRequired={required}
+      isDisabled={disabled}
+    >
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
-      <C {...field} {...props} id={field.name} />
+      <C
+        {...field}
+        {...props}
+        value={disabled ? "" : field.value}
+        id={field.name}
+      />
       {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
   );
