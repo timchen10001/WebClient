@@ -48,6 +48,7 @@ export type Post = {
   text: Scalars['String'];
   points: Scalars['Float'];
   creatorId: Scalars['Float'];
+  creator: User;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   textSnippet: Scalars['String'];
@@ -60,6 +61,7 @@ export type Mutation = {
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+  vote: Scalars['Boolean'];
   createPost: Post;
   updatePost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
@@ -85,6 +87,12 @@ export type MutationRegisterArgs = {
 export type MutationLoginArgs = {
   password: Scalars['String'];
   usernameOrEmail: Scalars['String'];
+};
+
+
+export type MutationVoteArgs = {
+  value: Scalars['Int'];
+  postId: Scalars['Int'];
 };
 
 
@@ -126,6 +134,11 @@ export type InputPost = {
   text: Scalars['String'];
 };
 
+export type RegularCreatorFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'username' | 'email'>
+);
+
 export type RegularErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
@@ -134,6 +147,10 @@ export type RegularErrorFragment = (
 export type RegularPostFragment = (
   { __typename?: 'Post' }
   & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
+  & { creator: (
+    { __typename?: 'User' }
+    & RegularCreatorFragment
+  ) }
 );
 
 export type RegularUserFragment = (
@@ -266,6 +283,13 @@ export const RegularErrorFragmentDoc = gql`
   message
 }
     `;
+export const RegularCreatorFragmentDoc = gql`
+    fragment RegularCreator on User {
+  id
+  username
+  email
+}
+    `;
 export const RegularPostFragmentDoc = gql`
     fragment RegularPost on Post {
   id
@@ -273,11 +297,14 @@ export const RegularPostFragmentDoc = gql`
   text
   points
   creatorId
+  creator {
+    ...RegularCreator
+  }
   createdAt
   updatedAt
   textSnippet
 }
-    `;
+    ${RegularCreatorFragmentDoc}`;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id

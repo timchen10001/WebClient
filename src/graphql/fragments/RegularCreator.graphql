@@ -1,0 +1,5 @@
+fragment RegularCreator on User {
+    id
+    username
+    email
+}

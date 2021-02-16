@@ -22,11 +22,10 @@ const Index = () => {
     cursor: null as null | string,
   });
 
-  const [{ data, fetching, error, ...others }] = usePostsQuery({
+  const [{ data, fetching, error }] = usePostsQuery({
     variables,
     pause: isServer(),
   });
-
 
   return (
     <Layout>
@@ -50,6 +49,8 @@ const Index = () => {
               <Heading as="h2" size="lg">
                 {p.title}
               </Heading>
+              <Text color="gray" fontSize="sm">{p.creator.username}</Text>
+              <Text color="gray" fontSize="sm">{p.creator.email}</Text>
               <Text mt={4}>{p.textSnippet}</Text>
             </Box>
           ))}

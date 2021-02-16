@@ -4,6 +4,7 @@ fragment RegularPost on Post {
   text
   points
   creatorId
+  creator { ...RegularCreator }
   createdAt
   updatedAt
   textSnippet

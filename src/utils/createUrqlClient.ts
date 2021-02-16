@@ -49,11 +49,13 @@ const cursorPagination = (): Resolver => {
     );
     info.partial = !isItInTheCache;
     let hasMore: boolean = true;
+    let creator: string = '';
     const result: string[] = [];
 
     fieldInfos.forEach((fi) => {
       const key = cache.resolve(entityKey, fi.fieldKey) as string;
       const data = cache.resolve(key, "posts") as string[];
+
       const _hasMore = cache.resolve(key, "hasMore");
       // console.log("data: ", data);
       // console.log('hasMore: ', hasMore);
