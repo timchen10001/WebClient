@@ -6,4 +6,5 @@ fragment RegularPost on Post {
   creatorId
   createdAt
   updatedAt
+  textSnippet
 }
