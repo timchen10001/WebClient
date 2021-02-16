@@ -1,46 +1,80 @@
-import { Box, Link, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "../components/Layout";
 import NextPage from "next/link";
-import { useMeQuery, usePostsQuery } from "../generated/graphql";
+import { PaginatedPosts, usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { isServer } from "../utils/isServer";
 import { useIsAuth } from "../utils/useIsAuth";
 
 const Index = () => {
-  useIsAuth();
-
-  const pause = isServer();
-  const [{ data: meData }] = useMeQuery({ pause });
-  const [{ data: postData, fetching: postsFetching }] = usePostsQuery({
-    variables: { limit: 5 },
-    pause,
+  const [variables, setVariables] = useState({
+    limit: 10,
+    cursor: null as null | string,
   });
 
-  let body: any = null;
+  const [{ data, fetching, error, ...others }] = usePostsQuery({
+    variables,
+    pause: isServer(),
+  });
 
-  if (postsFetching) {
-    body = <Box>載入中···</Box>;
-  } else if (meData && postData?.posts) {
-    body = (
-      <Stack id="posts" height="fit-content" spacing={8}>
-        {postData.posts.map((p) => (
-          <Box key={p.id} mt={4}>
-            <h1>{p.title}</h1>
-            <p>{p.text}</p>
-          </Box>
-        ))}
-      </Stack>
-    );
-  }
+
   return (
-    <Layout variant="regular">
-      <NextPage href="/create-post">
-        <Link style={{ color: "red", textDecoration: "underline" }}>PO文</Link>
-      </NextPage>
-      {body}
+    <Layout>
+      <Flex alignItems="center">
+        <Heading as="h1" size="4xl">
+          Posts
+        </Heading>
+        <NextPage href="/create-post">
+          <Link ml="auto" color="red" textDecoration="underline">
+            PO文
+          </Link>
+        </NextPage>
+      </Flex>
       <br />
+      {!data?.posts && fetching ? (
+        <div>載入中···</div>
+      ) : (
+        <Stack spacing={8}>
+          {data?.posts?.posts?.map((p) => (
+            <Box key={p.id} p={5} shadow={"md"}>
+              <Heading as="h2" size="lg">
+                {p.title}
+              </Heading>
+              <Text mt={4}>{p.textSnippet}</Text>
+            </Box>
+          ))}
+        </Stack>
+      )}
+      {data?.posts?.hasMore ? (
+        <Flex>
+          <Button
+            colorScheme="messenger"
+            isLoading={fetching}
+            onClick={() => {
+              const { posts } = data.posts as PaginatedPosts;
+              setVariables({
+                limit: variables.limit,
+                cursor:
+                  posts[posts.length - 1]?.createdAt,
+              });
+            }}
+            m="auto"
+            my="8"
+          >
+            更多
+          </Button>
+        </Flex>
+      ) : null}
     </Layout>
   );
 };
