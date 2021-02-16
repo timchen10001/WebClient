@@ -13,8 +13,8 @@ import NextLink from "next/link";
 interface loginProps {}
 
 const Login: React.FC<loginProps> = ({}) => {
-  const [, login] = useLoginMutation();
   const router = useRouter();
+  const [, login] = useLoginMutation();
 
   return (
     <Wrapper variant="small">
@@ -26,11 +26,11 @@ const Login: React.FC<loginProps> = ({}) => {
           if (response.data?.login.errors) {
             setErrors(toErrorsMap(response.data.login.errors));
           } else if (response.data?.login.user) {
-            if (typeof router.query.next === "string") {
-              await router.push(router.query.next);
+            if (typeof router.query?.next === "string") {
+              router.push(router.query.next);
+            } else {
+              router.push('/')
             }
-          } else {
-            router.replace("/");
           }
         }}
       >
