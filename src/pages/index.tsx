@@ -57,7 +57,7 @@ const Index = () => {
                   {p.title}
                 </Heading>
                 <Text color="gray" fontSize="sm">
-                  posted by {p.creator.username}
+                  posted by {p.creator?.username}
                 </Text>
                 <Text mt={4}>{p.textSnippet}</Text>
               </Box>
