@@ -36,7 +36,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
 
           const { error } = await createPost({ input: { title, text } });
           if (!error) {
-            await router.replace("/");
+            await router.push("/");
           }
           console.log(error);
         }}

@@ -12,9 +12,9 @@ import {
   PostsQuery,
   RegisterMutation,
 } from "../generated/graphql";
-import { betterUpdateQuery } from "./betterUpdateQuery";
 import Router from "next/router";
-import { colorParser } from "@chakra-ui/react";
+import { betterUpdateQuery } from "./betterUpdateQuery";
+import { betterInvalidateQuery } from "./betterInvalidateQuery";
 
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
   return pipe(
@@ -33,34 +33,39 @@ const cursorPagination = (): Resolver => {
     const { parentKey: entityKey, fieldName } = info;
 
     const allFields = cache.inspectFields(entityKey);
-    console.log("allFields", allFields);
 
     const fieldInfos = allFields.filter((info) => info.fieldName === fieldName);
-    console.log("allFields: ", fieldInfos);
+
     const size = fieldInfos.length;
     if (size === 0) {
       return undefined;
     }
     const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`;
-    // console.log("key we created: ", fieldKey);
     const isItInTheCache = cache.resolve(
       cache.resolve(entityKey, fieldKey) as string,
       "posts"
     );
     info.partial = !isItInTheCache;
     let hasMore: boolean = true;
-    let creator: string = '';
     const result: string[] = [];
 
+    // console.log({
+    //   allFields,
+    //   fieldInfos,
+    //   fieldKey,
+    //   isItInTheCache
+    // })
     fieldInfos.forEach((fi) => {
       const key = cache.resolve(entityKey, fi.fieldKey) as string;
       const data = cache.resolve(key, "posts") as string[];
-
-      const _hasMore = cache.resolve(key, "hasMore");
-      // console.log("data: ", data);
-      // console.log('hasMore: ', hasMore);
+      const _hasMore = cache.resolve(key, "hasMore") as boolean;
+      // console.log({
+      //   key,
+      //   data,
+      //   _hasMore,
+      // });
       if (!_hasMore) {
-        hasMore = _hasMore as boolean;
+        hasMore = _hasMore;
       }
       result.push(...data);
     });
@@ -69,7 +74,7 @@ const cursorPagination = (): Resolver => {
       __typename: "PaginatedPosts",
       hasMore,
       posts: result,
-    }
+    };
 
     // const visited = new Set();
     // let result: NullArray<string> = [];
@@ -136,7 +141,7 @@ export const createUrqlClient = (ssrExchange: any) => {
       dedupExchange,
       cacheExchange({
         keys: {
-          PaginatedPosts: () => null
+          PaginatedPosts: () => null,
         },
         resolvers: {
           Query: {
@@ -145,6 +150,14 @@ export const createUrqlClient = (ssrExchange: any) => {
         },
         updates: {
           Mutation: {
+            // vote: (_result, args, cache, info) => {
+            //   // betterInvalidateQuery(cache, "Query", "posts");
+            // },
+            
+            createPost: (_result, args, cache, info) => {
+              betterInvalidateQuery(cache, "Query", "posts");
+            },
+
             login: (_result, args, cache, info) => {
               betterUpdateQuery<LoginMutation, MeQuery>(
                 cache,
