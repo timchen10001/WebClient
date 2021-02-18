@@ -1,17 +1,22 @@
 import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
 import { Flex, IconButton } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { RegularPostFragment, useVoteMutation } from "../generated/graphql";
+import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
 
 interface UpdootSectionProps {
-  post: RegularPostFragment;
+  post: PostSnippetFragment;
 }
 
 export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
   const [loadingState, setLoadingState] = useState<
     "updoot-loading" | "downdoot-loading" | "not-loading"
   >("not-loading");
-  const [{ fetching }, vote] = useVoteMutation();
+  const [, vote] = useVoteMutation();
+  const { id:postId, voteStatus } = post;
+
+  const bgc = "#f2f2f2";
+  const updootBgc = voteStatus === 1 ? "lightgreen" : bgc;
+  const downdoorBgc = voteStatus === -1 ? "red" : bgc;
 
   return (
     <Flex
@@ -24,25 +29,25 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
         size="md"
         aria-label="updoot post"
         icon={<TriangleUpIcon />}
-        style={{ backgroundColor: "#f2f2f2" }}
-        isLoading={loadingState === 'updoot-loading'}
+        style={{ backgroundColor: updootBgc }}
+        isLoading={loadingState === "updoot-loading"}
         onClick={async () => {
           setLoadingState("updoot-loading");
-          await vote({ postId: post.id, value: 1 });
-          setLoadingState('not-loading');
+          await vote({ postId, value: 1 });
+          setLoadingState("not-loading");
         }}
       />
       {post.points}
       <IconButton
         size="md"
         aria-label="downdoot post"
-        icon={<TriangleDownIcon />}
-        style={{ backgroundColor: "#f2f2f2" }}
-        isLoading={loadingState === 'downdoot-loading'}
+        icon={<TriangleDownIcon focusable="false"/>}
+        style={{ backgroundColor: downdoorBgc,  }}
+        isLoading={loadingState === "downdoot-loading"}
         onClick={async () => {
           setLoadingState("downdoot-loading");
-          await vote({ postId: post.id, value: -1 });
-          setLoadingState('not-loading');
+          await vote({ postId, value: -1 });
+          setLoadingState("not-loading");
         }}
       />
     </Flex>

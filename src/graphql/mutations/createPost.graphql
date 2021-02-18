@@ -1,5 +1,5 @@
 mutation CreatePost($input: InputPost!){
   createPost(input: $input) {
-    ...RegularPost
+    ...PostSnippet
   }
 }

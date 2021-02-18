@@ -47,6 +47,7 @@ export type Post = {
   title: Scalars['String'];
   text: Scalars['String'];
   points: Scalars['Float'];
+  voteStatus?: Maybe<Scalars['Int']>;
   creatorId: Scalars['Float'];
   creator?: Maybe<User>;
   createdAt: Scalars['String'];
@@ -134,6 +135,15 @@ export type InputPost = {
   text: Scalars['String'];
 };
 
+export type PostSnippetFragment = (
+  { __typename?: 'Post' }
+  & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'voteStatus' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
+  & { creator?: Maybe<(
+    { __typename?: 'User' }
+    & RegularCreatorFragment
+  )> }
+);
+
 export type RegularCreatorFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username' | 'email'>
@@ -142,15 +152,6 @@ export type RegularCreatorFragment = (
 export type RegularErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
-);
-
-export type RegularPostFragment = (
-  { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
-  & { creator?: Maybe<(
-    { __typename?: 'User' }
-    & RegularCreatorFragment
-  )> }
 );
 
 export type RegularUserFragment = (
@@ -187,7 +188,7 @@ export type CreatePostMutation = (
   { __typename?: 'Mutation' }
   & { createPost: (
     { __typename?: 'Post' }
-    & RegularPostFragment
+    & PostSnippetFragment
   ) }
 );
 
@@ -283,17 +284,11 @@ export type PostsQuery = (
     & Pick<PaginatedPosts, 'hasMore'>
     & { posts: Array<(
       { __typename?: 'Post' }
-      & RegularPostFragment
+      & PostSnippetFragment
     )> }
   ) }
 );
 
-export const RegularErrorFragmentDoc = gql`
-    fragment RegularError on FieldError {
-  field
-  message
-}
-    `;
 export const RegularCreatorFragmentDoc = gql`
     fragment RegularCreator on User {
   id
@@ -301,12 +296,13 @@ export const RegularCreatorFragmentDoc = gql`
   email
 }
     `;
-export const RegularPostFragmentDoc = gql`
-    fragment RegularPost on Post {
+export const PostSnippetFragmentDoc = gql`
+    fragment PostSnippet on Post {
   id
   title
   text
   points
+  voteStatus
   creatorId
   creator {
     ...RegularCreator
@@ -316,6 +312,12 @@ export const RegularPostFragmentDoc = gql`
   textSnippet
 }
     ${RegularCreatorFragmentDoc}`;
+export const RegularErrorFragmentDoc = gql`
+    fragment RegularError on FieldError {
+  field
+  message
+}
+    `;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
@@ -345,10 +347,10 @@ export function useChangePasswordMutation() {
 export const CreatePostDocument = gql`
     mutation CreatePost($input: InputPost!) {
   createPost(input: $input) {
-    ...RegularPost
+    ...PostSnippet
   }
 }
-    ${RegularPostFragmentDoc}`;
+    ${PostSnippetFragmentDoc}`;
 
 export function useCreatePostMutation() {
   return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
@@ -430,11 +432,11 @@ export const PostsDocument = gql`
   posts(limit: $limit, cursor: $cursor) {
     hasMore
     posts {
-      ...RegularPost
+      ...PostSnippet
     }
   }
 }
-    ${RegularPostFragmentDoc}`;
+    ${PostSnippetFragmentDoc}`;
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });

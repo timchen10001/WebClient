@@ -1,20 +1,18 @@
 import { dedupExchange, fetchExchange, stringifyVariables } from "@urql/core";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
+import gql from "graphql-tag";
+import Router from "next/router";
 import { Exchange } from "urql";
 import { pipe, tap } from "wonka";
 import {
-  CreatePostMutation,
   LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
-  PostsDocument,
-  PostsQuery,
   RegisterMutation,
+  VoteMutationVariables
 } from "../generated/graphql";
-import Router from "next/router";
 import { betterUpdateQuery } from "./betterUpdateQuery";
-import { betterInvalidateQuery } from "./betterInvalidateQuery";
 
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
   return pipe(
@@ -150,12 +148,54 @@ export const createUrqlClient = (ssrExchange: any) => {
         },
         updates: {
           Mutation: {
-            // vote: (_result, args, cache, info) => {
-            //   // betterInvalidateQuery(cache, "Query", "posts");
-            // },
-            
+            vote: (_result, args, cache, info) => {
+              const { postId, value } = args as VoteMutationVariables;
+              const data = cache.readFragment(
+                gql`
+                  fragment _ on Post {
+                    id
+                    points
+                    voteStatus
+                  }
+                `,
+                { id: postId } as any
+              );
+              console.log({
+                data,
+              });
+              if (data) {
+                const sameDoot = data.voteStatus === value;
+                const oldPoints = data.points as number;
+                const newPoints = sameDoot
+                  ? oldPoints - value
+                  : oldPoints + (!data.voteStatus ? 1 : 2) * value;
+                const newVoteStatus = sameDoot ? null : value;
+
+                cache.writeFragment(
+                  gql`
+                    fragment _ on Post {
+                      id
+                      points
+                      voteStatus
+                    }
+                  `,
+                  {
+                    id: postId,
+                    points: newPoints,
+                    voteStatus: newVoteStatus,
+                  } as any
+                );
+              }
+            },
+
             createPost: (_result, args, cache, info) => {
-              betterInvalidateQuery(cache, "Query", "posts");
+              const allFields = cache.inspectFields("Query");
+              const fieldInfos = allFields.filter(
+                (fi) => fi.fieldName === "posts"
+              );
+              fieldInfos.forEach((fi) => {
+                cache.invalidate("Query", "posts", fi.arguments || {});
+              });
             },
 
             login: (_result, args, cache, info) => {
