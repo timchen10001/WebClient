@@ -45,6 +45,7 @@ const ForgetPassword: React.FC<forgetPasswordProps> = ({}) => {
                 label="使用者信箱"
                 name="email"
                 placeholder="輸入電子信箱，以重設密碼"
+                disabled={isSubmitting}
                 required={true}
               />
               <Box mt={4}>

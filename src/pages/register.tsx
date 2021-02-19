@@ -67,6 +67,7 @@ const Register: React.FC<registerProps> = ({}) => {
                 name="email"
                 label="電子信箱"
                 placeholder="請輸入電子信箱"
+                disabled={isSubmitting}
                 required={true}
               />
             </Box>
@@ -76,6 +77,7 @@ const Register: React.FC<registerProps> = ({}) => {
                 label="使用者密碼"
                 placeholder="密碼長度需至少 6 字元"
                 type="password"
+                disabled={isSubmitting}
                 required={true}
               />
             </Box>
@@ -85,6 +87,7 @@ const Register: React.FC<registerProps> = ({}) => {
                 label="確認使用者密碼"
                 placeholder="重複使用者密碼"
                 type="password"
+                disabled={isSubmitting}
                 required={true}
               />
             </Box>

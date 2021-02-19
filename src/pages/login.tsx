@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
-import React from "react";
+import React, { useState } from "react";
 import { InputField } from "../components/InputField";
 import { Wrapper } from "../components/Wrapper";
 import { useLoginMutation } from "../generated/graphql";
@@ -9,12 +9,13 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { toErrorsMap } from "../utils/toErrorsMap";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
+import { Layout } from "../components/Layout";
 
 interface loginProps {}
 
 const Login: React.FC<loginProps> = ({}) => {
   const router = useRouter();
-  const [, login] = useLoginMutation();
+  const [{ fetching }, login] = useLoginMutation();
 
   return (
     <Wrapper variant="small">
@@ -29,7 +30,7 @@ const Login: React.FC<loginProps> = ({}) => {
             if (typeof router.query?.next === "string") {
               router.push(router.query.next);
             } else {
-              router.push('/')
+              router.push("/");
             }
           }
         }}
@@ -37,6 +38,7 @@ const Login: React.FC<loginProps> = ({}) => {
         {({ isSubmitting, handleChange }) => (
           <Form>
             <InputField
+              disabled={fetching}
               name="usernameOrEmail"
               label="使用者名稱或電子信箱"
               placeholder="輸入您的使用者名稱或電子信箱"
@@ -45,6 +47,7 @@ const Login: React.FC<loginProps> = ({}) => {
             />
             <Box mt={2}>
               <InputField
+                disabled={fetching}
                 name="password"
                 label="使用者密碼"
                 placeholder="使用者密碼長度不得低於 6 個字元"
@@ -54,14 +57,24 @@ const Login: React.FC<loginProps> = ({}) => {
               />
             </Box>
             <Flex mt={2}>
-              <NextLink href="/forgetPassword">
+              <NextLink href="/register">
                 <Link
                   ml="auto"
+                  fontSize="small"
+                  color="green"
+                  textDecoration="underline"
+                >
+                  註冊帳號
+                </Link>
+              </NextLink>
+              <NextLink href="/forgetPassword">
+                <Link
+                  ml={2}
                   fontSize="small"
                   color="red"
                   textDecoration="underline"
                 >
-                  忘記密碼
+                  忘記密碼?
                 </Link>
               </NextLink>
             </Flex>

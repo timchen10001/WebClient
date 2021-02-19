@@ -14,7 +14,7 @@ import { toErrorsMap } from "../../utils/toErrorsMap";
 
 const ChangePassword: NextPage<{ token: string }> = ({}) => {
   const router = useRouter();
-  const [{ fetching }, changePassword] = useChangePasswordMutation();
+  const [, changePassword] = useChangePasswordMutation();
   const [tokenExpried, setTokenExpired] = useState(false);
 
   return (
@@ -59,7 +59,8 @@ const ChangePassword: NextPage<{ token: string }> = ({}) => {
               placeholder="密碼長度不得低於 6 個字元"
               required={true}
               type="password"
-              disabled={tokenExpried}
+              disabled={isSubmitting || tokenExpried}
+              clearValue={tokenExpried}
               autoComplete="new-password"
             />
             <Box mt={4}>
@@ -69,7 +70,8 @@ const ChangePassword: NextPage<{ token: string }> = ({}) => {
                 placeholder="請再次輸入密碼"
                 type="password"
                 autoComplete="new-password"
-                disabled={tokenExpried}
+                disabled={isSubmitting || tokenExpried}
+                clearValue={tokenExpried}
                 required={true}
               />
             </Box>

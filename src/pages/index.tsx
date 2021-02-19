@@ -1,18 +1,25 @@
+import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Flex,
   Heading,
+  IconButton,
   Link,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import NextPage from "next/link";
+import NextLink from "next/link";
 import React, { useState } from "react";
 import { Layout } from "../components/Layout";
 import { UpdootSection } from "../components/UpdootSection";
-import { PaginatedPosts, usePostsQuery } from "../generated/graphql";
+import {
+  PaginatedPosts,
+  useDeletePostMutation,
+  useMeQuery,
+  usePostsQuery,
+} from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { isServer } from "../utils/isServer";
 
@@ -23,10 +30,14 @@ const Index = () => {
   });
 
   const pause = isServer();
+  const [{ data: meQuery }] = useMeQuery({ pause });
   const [{ data, fetching, error }] = usePostsQuery({
     variables,
     pause,
   });
+
+  const [, deletePost] = useDeletePostMutation();
+  const [deletedPostId, setDeletedPostId] = useState(-1);
 
   if (error) {
     return <div>錯誤 404</div>;
@@ -34,35 +45,53 @@ const Index = () => {
 
   return (
     <Layout>
-      <Flex alignItems="center">
-        <Heading as="h1" size="4xl">
-          Posts
-        </Heading>
-        <NextPage href="/create-post">
-          <Link ml="auto" color="red" textDecoration="underline">
-            PO文
-          </Link>
-        </NextPage>
-      </Flex>
+      <Heading as="h1" size="4xl">
+        Posts
+      </Heading>
       <br />
       {!data?.posts || fetching ? (
         <div>載入中···</div>
       ) : (
         <Stack spacing={8}>
-          {data?.posts?.posts?.map((p) => (
-            <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
-              <UpdootSection post={p} />
-              <Box>
-                <Heading as="h2" size="lg">
-                  {p.title}
-                </Heading>
-                <Text color="gray" fontSize="sm">
-                  posted by {p.creator?.username}
-                </Text>
-                <Text mt={4}>{p.textSnippet}</Text>
-              </Box>
-            </Flex>
-          ))}
+          {data?.posts?.posts?.map((p) =>
+            !p ? null : (
+              <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
+                <UpdootSection post={p} />
+                <Box flex={1}>
+                  <NextLink href="/page/[id]" as={`/page/${p.id}`}>
+                    <Link>
+                      <Heading fontSize="larger">{p.title}</Heading>
+                    </Link>
+                  </NextLink>
+                  <Text color="gray" fontSize="sm">
+                    posted by {p.creator?.username}
+                  </Text>
+                  <Flex align="center" mt={4}>
+                    <Text flex={1}>
+                      {p.textSnippet}
+                      {p.text.length > p.textSnippet.length ? " ... " : null}
+                    </Text>
+                    {meQuery?.me?.id === p.creator?.id ? (
+                      <IconButton
+                        ml="auto"
+                        aria-label="刪除貼文"
+                        colorScheme="red"
+                        color="white"
+                        icon={<DeleteIcon />}
+                        size={"sm"}
+                        _hover={{ bgColor: "red" }}
+                        isLoading={p.id === deletedPostId}
+                        onClick={async () => {
+                          setDeletedPostId(p.id);
+                          await deletePost({ id: p.id });
+                        }}
+                      />
+                    ) : null}
+                  </Flex>
+                </Box>
+              </Flex>
+            )
+          )}
         </Stack>
       )}
       {data?.posts?.hasMore ? (
@@ -73,9 +102,17 @@ const Index = () => {
             isLoading={fetching}
             onClick={() => {
               const { posts } = data.posts as PaginatedPosts;
+              let size: number = posts.length - 1;
+              // const lastPostInPagination = posts[size];
+              while (size >= 0 && !posts[size]) {
+                size--;
+                // console.log(size);
+              }
+              const lastPostInPagination = posts[size];
+              // console.log(lastPostInPagination);
               setVariables({
                 limit: variables.limit,
-                cursor: posts[posts.length - 1]?.createdAt,
+                cursor: lastPostInPagination?.createdAt,
               });
             }}
             m="auto"
