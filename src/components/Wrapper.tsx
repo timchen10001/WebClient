@@ -4,19 +4,21 @@ import React from "react";
 export type WrapperVariant = "small" | "regular";
 
 interface WrapperProps {
-  variant: WrapperVariant;
+  variant?: WrapperVariant;
 }
 
 export const Wrapper: React.FC<WrapperProps> = ({
   variant = "regular",
   children,
-}) => (
-  <Box
-    mt={8}
-    mx="auto"
-    maxWidth={variant === "regular" ? "800px" : "400px"}
-    w="100%"
-  >
-    {children}
-  </Box>
-);
+}) => {
+  return (
+    <Box
+      mt={8}
+      mx="auto"
+      maxWidth={variant === "regular" ? "800px" : "400px"}
+      w="100%"
+    >
+      {children}
+    </Box>
+  );
+};

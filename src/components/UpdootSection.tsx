@@ -1,4 +1,4 @@
-import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { Flex, IconButton } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
@@ -12,7 +12,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
     "updoot-loading" | "downdoot-loading" | "not-loading"
   >("not-loading");
   const [, vote] = useVoteMutation();
-  const { id:postId, voteStatus } = post;
+  const { id: postId, voteStatus } = post;
 
   const bgc = "#f2f2f2";
   const updootBgc = voteStatus === 1 ? "lightgreen" : bgc;
@@ -41,8 +41,8 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
       <IconButton
         size="md"
         aria-label="downdoot post"
-        icon={<TriangleDownIcon focusable="false"/>}
-        style={{ backgroundColor: downdoorBgc,  }}
+        icon={<TriangleDownIcon focusable="false" />}
+        style={{ backgroundColor: downdoorBgc }}
         isLoading={loadingState === "downdoot-loading"}
         onClick={async () => {
           setLoadingState("downdoot-loading");
