@@ -110,7 +110,7 @@ export type MutationCreatePostArgs = {
 
 export type MutationUpdatePostArgs = {
   input: InputPost;
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 
@@ -263,6 +263,20 @@ export type RegisterMutation = (
       & RegularUserFragment
     )> }
   ) }
+);
+
+export type UpdatePostMutationVariables = Exact<{
+  id: Scalars['Int'];
+  input: InputPost;
+}>;
+
+
+export type UpdatePostMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePost?: Maybe<(
+    { __typename?: 'Post' }
+    & PostSnippetFragment
+  )> }
 );
 
 export type VoteMutationVariables = Exact<{
@@ -444,6 +458,17 @@ ${RegularUserFragmentDoc}`;
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const UpdatePostDocument = gql`
+    mutation UpdatePost($id: Int!, $input: InputPost!) {
+  updatePost(id: $id, input: $input) {
+    ...PostSnippet
+  }
+}
+    ${PostSnippetFragmentDoc}`;
+
+export function useUpdatePostMutation() {
+  return Urql.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument);
 };
 export const VoteDocument = gql`
     mutation Vote($value: Int!, $postId: Int!) {

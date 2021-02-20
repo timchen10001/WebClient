@@ -30,13 +30,11 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     body = (
       <>
         <NextLink href="/create-post">
-          <Button p={2} bg="whiteAlpha.800">
+          <Button mr={4} bg="whiteAlpha.800">
             發布文章
           </Button>
         </NextLink>
-        <Box ml={4} fontWeight="600">
-          {data.me.username}
-        </Box>
+        <Box fontWeight="600">{data.me.username}</Box>
         <Button
           ml={2}
           isLoading={logoutFetching}
@@ -52,7 +50,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   }
 
   return (
-    <Flex bg="messenger.500" position="sticky" zIndex="1" top="0" p={4}>
+    <Box bg="messenger.500" position="sticky" zIndex="1" top="0" p={4}>
       <Flex flex={1} m="auto" align="center" maxW={800}>
         <NextLink href="/">
           <Button colorScheme="none" variant="solid">
@@ -63,6 +61,6 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           <Flex align="center">{body}</Flex>
         </Box>
       </Flex>
-    </Flex>
+    </Box>
   );
 };

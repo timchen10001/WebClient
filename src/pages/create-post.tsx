@@ -9,7 +9,7 @@ import { postInputExamination } from "../utils/postInputExamination";
 import { toErrorsMap } from "../utils/toErrorsMap";
 import { useRouter } from "next/router";
 import { Layout } from "../components/Layout";
-import { useIsAuth } from "../utils/useIsAuth";
+import { useIsAuth } from "../hooks/useIsAuth";
 
 interface createPostProps {}
 

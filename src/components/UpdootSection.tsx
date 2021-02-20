@@ -26,7 +26,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
       mr={4}
     >
       <IconButton
-        size="md"
+        size="sm"
         aria-label="updoot post"
         icon={<TriangleUpIcon />}
         style={{ backgroundColor: updootBgc }}
@@ -39,7 +39,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
       />
       {post.points}
       <IconButton
-        size="md"
+        size="sm"
         aria-label="downdoot post"
         icon={<TriangleDownIcon focusable="false" />}
         style={{ backgroundColor: downdoorBgc }}

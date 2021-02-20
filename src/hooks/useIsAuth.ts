@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useMeQuery } from "../generated/graphql";
-import { isServer } from "./isServer";
+import { isServer } from "../utils/isServer";
 export const useIsAuth = (): void => {
   const pause = isServer();
   const router = useRouter();

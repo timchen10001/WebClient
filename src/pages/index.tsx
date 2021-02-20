@@ -1,4 +1,4 @@
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -58,7 +58,7 @@ const Index = () => {
               <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
                 <UpdootSection post={p} />
                 <Box flex={1}>
-                  <NextLink href="/page/[id]" as={`/page/${p.id}`}>
+                  <NextLink href="/post/[id]" as={`/post/${p.id}`}>
                     <Link>
                       <Heading fontSize="larger">{p.title}</Heading>
                     </Link>
@@ -71,22 +71,33 @@ const Index = () => {
                       {p.textSnippet}
                       {p.text.length > p.textSnippet.length ? " ... " : null}
                     </Text>
-                    {meQuery?.me?.id === p.creator?.id ? (
-                      <IconButton
-                        ml="auto"
-                        aria-label="刪除貼文"
-                        colorScheme="red"
-                        color="white"
-                        icon={<DeleteIcon />}
-                        size={"sm"}
-                        _hover={{ bgColor: "red" }}
-                        isLoading={p.id === deletedPostId}
-                        onClick={async () => {
-                          setDeletedPostId(p.id);
-                          await deletePost({ id: p.id });
-                        }}
-                      />
-                    ) : null}
+                    {meQuery?.me?.id !== p.creator?.id ? null : (
+                      <Flex align="center" ml="auto">
+                        <NextLink href="/edit/[id]" as={`/edit/${p.id}`}>
+                          <IconButton
+                            aria-label="修改貼文"
+                            icon={<EditIcon />}
+                            size={"sm"}
+                            bgColor={"#f2f2f2"}
+                            _hover={{ bgColor: "lightgreen" }}
+                          />
+                        </NextLink>
+                        <IconButton
+                          ml={2}
+                          aria-label="刪除貼文"
+                          icon={<DeleteIcon />}
+                          colorScheme="red"
+                          color="white"
+                          size={"sm"}
+                          _hover={{ bgColor: "red" }}
+                          isLoading={p.id === deletedPostId}
+                          onClick={async () => {
+                            setDeletedPostId(p.id);
+                            await deletePost({ id: p.id });
+                          }}
+                        />
+                      </Flex>
+                    )}
                   </Flex>
                 </Box>
               </Flex>
