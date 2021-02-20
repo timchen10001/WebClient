@@ -141,6 +141,11 @@ export type InputPost = {
   text: Scalars['String'];
 };
 
+export type PostEditSnippetFragment = (
+  { __typename?: 'Post' }
+  & Pick<Post, 'title' | 'text' | 'textSnippet'>
+);
+
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
   & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'voteStatus' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
@@ -275,7 +280,8 @@ export type UpdatePostMutation = (
   { __typename?: 'Mutation' }
   & { updatePost?: Maybe<(
     { __typename?: 'Post' }
-    & PostSnippetFragment
+    & Pick<Post, 'id'>
+    & PostEditSnippetFragment
   )> }
 );
 
@@ -332,6 +338,13 @@ export type PostsQuery = (
   ) }
 );
 
+export const PostEditSnippetFragmentDoc = gql`
+    fragment PostEditSnippet on Post {
+  title
+  text
+  textSnippet
+}
+    `;
 export const RegularCreatorFragmentDoc = gql`
     fragment RegularCreator on User {
   id
@@ -462,10 +475,11 @@ export function useRegisterMutation() {
 export const UpdatePostDocument = gql`
     mutation UpdatePost($id: Int!, $input: InputPost!) {
   updatePost(id: $id, input: $input) {
-    ...PostSnippet
+    id
+    ...PostEditSnippet
   }
 }
-    ${PostSnippetFragmentDoc}`;
+    ${PostEditSnippetFragmentDoc}`;
 
 export function useUpdatePostMutation() {
   return Urql.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument);

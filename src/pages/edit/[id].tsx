@@ -5,8 +5,10 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
 import { Layout } from "../../components/Layout";
-import { InputPost, useUpdatePostMutation } from "../../generated/graphql";
-import { useGetPostFromUrql } from "../../hooks/useGetPostFromUrql";
+import { usePostQuery, useUpdatePostMutation } from "../../generated/graphql";
+import {
+  useGetPostIntId,
+} from "../../hooks/useGetPostIntId";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { postInputExamination } from "../../utils/postInputExamination";
 import { toErrorsMap } from "../../utils/toErrorsMap";
@@ -14,8 +16,14 @@ import { toErrorsMap } from "../../utils/toErrorsMap";
 interface EditPostProps {}
 
 const EditPost: React.FC<EditPostProps> = ({}) => {
-  const [{ data, fetching, error }] = useGetPostFromUrql();
   const router = useRouter();
+  const intId = useGetPostIntId();
+  const [{ data, fetching, error }] = usePostQuery({
+    pause: intId === -1,
+    variables: {
+      id: intId,
+    },
+  });
   const [editing, setEditing] = useState(false);
   const [, updatePost] = useUpdatePostMutation();
 
@@ -40,31 +48,29 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
           if (checkError) {
             setErrors(toErrorsMap(checkError));
             setEditing(false);
-            return
+            return;
           }
 
-          if (data.post?.id) {
-            const success = !!(await updatePost({
-              id: data.post.id,
-              input: {
-                title,
-                text,
-              },
-            }));
+          await updatePost({
+            id: intId,
+            input: {
+              ...values,
+            },
+          });
 
-            if (success) {
-              router.push("/");
-            }
-          }
-
-          // console.log(values);
+          router.push("/");
         }}
       >
         {({ isSubmitting, handleChange }) => (
           <Form>
             <InputField label="標題" name="title" disabled={editing} />
             <Box mt={4}>
-              <InputField label="內容" name="text" disabled={editing} />
+              <InputField
+                label="內容"
+                name="text"
+                textArea
+                disabled={editing}
+              />
             </Box>
             <Box mt={4}>
               <Button

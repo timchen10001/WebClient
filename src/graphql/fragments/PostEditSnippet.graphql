@@ -1,0 +1,5 @@
+fragment PostEditSnippet on Post {
+  title
+  text
+  textSnippet
+}

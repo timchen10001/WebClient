@@ -1,25 +1,16 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  IconButton,
-  Link,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import NextLink from "next/link";
 import React, { useState } from "react";
+import { DeleteAlertDialog } from "../components/DeleteAlertDialog";
+import { EditDeletePostSection } from "../components/EditDeletePostSection";
 import { Layout } from "../components/Layout";
 import { UpdootSection } from "../components/UpdootSection";
 import {
   PaginatedPosts,
-  useDeletePostMutation,
-  useMeQuery,
+  PostSnippetFragment,
   usePostsQuery,
 } from "../generated/graphql";
+import { useIsPaginating } from "../hooks/useIsPaginating";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { isServer } from "../utils/isServer";
 
@@ -28,16 +19,18 @@ const Index = () => {
     limit: 10,
     cursor: null as null | string,
   });
+  const [selectPost, setSelectPost] = useState({
+    id: -1,
+    title: "",
+    text: "",
+  } as PostSnippetFragment);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const pause = isServer();
-  const [{ data: meQuery }] = useMeQuery({ pause });
   const [{ data, fetching, error }] = usePostsQuery({
+    pause: isServer(),
     variables,
-    pause,
   });
-
-  const [, deletePost] = useDeletePostMutation();
-  const [deletedPostId, setDeletedPostId] = useState(-1);
+  const moreFetching = useIsPaginating([data]);
 
   if (error) {
     return <div>錯誤 404</div>;
@@ -49,76 +42,38 @@ const Index = () => {
         Posts
       </Heading>
       <br />
-      {!data?.posts || fetching ? (
-        <div>載入中···</div>
+      <DeleteAlertDialog selectPost={selectPost} hook={[isOpen, setIsOpen]} />
+      {fetching || !data?.posts ? (
+        <Spinner size={"lg"} />
       ) : (
         <Stack spacing={8}>
-          {data?.posts?.posts?.map((p) =>
+          {data.posts?.posts?.map((p) =>
             !p ? null : (
               <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
                 <UpdootSection post={p} />
-                <Box flex={1}>
-                  <NextLink href="/post/[id]" as={`/post/${p.id}`}>
-                    <Link>
-                      <Heading fontSize="larger">{p.title}</Heading>
-                    </Link>
-                  </NextLink>
-                  <Text color="gray" fontSize="sm">
-                    posted by {p.creator?.username}
-                  </Text>
-                  <Flex align="center" mt={4}>
-                    <Text flex={1}>
-                      {p.textSnippet}
-                      {p.text.length > p.textSnippet.length ? " ... " : null}
-                    </Text>
-                    {meQuery?.me?.id !== p.creator?.id ? null : (
-                      <Flex align="center" ml="auto">
-                        <NextLink href="/edit/[id]" as={`/edit/${p.id}`}>
-                          <IconButton
-                            aria-label="修改貼文"
-                            icon={<EditIcon />}
-                            size={"sm"}
-                            bgColor={"#f2f2f2"}
-                            _hover={{ bgColor: "lightgreen" }}
-                          />
-                        </NextLink>
-                        <IconButton
-                          ml={2}
-                          aria-label="刪除貼文"
-                          icon={<DeleteIcon />}
-                          colorScheme="red"
-                          color="white"
-                          size={"sm"}
-                          _hover={{ bgColor: "red" }}
-                          isLoading={p.id === deletedPostId}
-                          onClick={async () => {
-                            setDeletedPostId(p.id);
-                            await deletePost({ id: p.id });
-                          }}
-                        />
-                      </Flex>
-                    )}
-                  </Flex>
-                </Box>
+                <EditDeletePostSection
+                  post={p}
+                  onClick={() => {
+                    setSelectPost(p);
+                    setIsOpen(true);
+                  }}
+                />
               </Flex>
             )
           )}
         </Stack>
       )}
-      {data?.posts?.hasMore ? (
+      {!data?.posts?.hasMore ? null : (
         <Flex>
           <Button
+            m="auto"
+            my="8"
             size="sm"
             style={{ backgroundColor: "#dadcea" }}
-            isLoading={fetching}
+            isLoading={moreFetching}
             onClick={() => {
               const { posts } = data.posts as PaginatedPosts;
               let size: number = posts.length - 1;
-              // const lastPostInPagination = posts[size];
-              while (size >= 0 && !posts[size]) {
-                size--;
-                // console.log(size);
-              }
               const lastPostInPagination = posts[size];
               // console.log(lastPostInPagination);
               setVariables({
@@ -126,13 +81,11 @@ const Index = () => {
                 cursor: lastPostInPagination?.createdAt,
               });
             }}
-            m="auto"
-            my="8"
           >
             更多
           </Button>
         </Flex>
-      ) : null}
+      )}
     </Layout>
   );
 };

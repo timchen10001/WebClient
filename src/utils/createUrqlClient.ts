@@ -12,6 +12,7 @@ import {
   MeDocument,
   MeQuery,
   RegisterMutation,
+  UpdatePostMutationVariables,
   VoteMutationVariables,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
@@ -159,6 +160,7 @@ export const createUrqlClient = (
         },
         updates: {
           Mutation: {
+
             deletePost: (_result, args, cache, info) => {
               cache.invalidate({
                 __typename: "Post",
@@ -223,7 +225,7 @@ export const createUrqlClient = (
                   return { me: result.login.user };
                 }
               );
-              reRenderFieldsByCache(cache, "Query", "posts")
+              reRenderFieldsByCache(cache, "Query", "posts");
             },
 
             register: (_result, args, cache, info) => {

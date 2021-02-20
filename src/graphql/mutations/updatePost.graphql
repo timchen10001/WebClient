@@ -1,5 +1,6 @@
 mutation UpdatePost($id: Int!, $input: InputPost!) {
-    updatePost(id: $id, input: $input) {
-        ...PostSnippet
-    }
+  updatePost(id: $id, input: $input) {
+    id
+    ...PostEditSnippet
+  }
 }
