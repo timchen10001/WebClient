@@ -1,6 +1,9 @@
-import { Box, Container, Heading, Spinner } from "@chakra-ui/react";
+import { Box, Container, Heading } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { DeleteAlertDialog } from "../../components/DeleteAlertDialog";
+import { EditDeleteButtons } from "../../components/EditDeleteButtons";
 import { Layout } from "../../components/Layout";
 import { usePostQuery } from "../../generated/graphql";
 import { useGetPostIntId } from "../../hooks/useGetPostIntId";
@@ -9,6 +12,8 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 interface PostProps {}
 
 const Post: React.FC<PostProps> = ({}) => {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
   const intId = useGetPostIntId();
   const [{ data, fetching, error }] = usePostQuery({
     pause: intId === -1,
@@ -21,23 +26,40 @@ const Post: React.FC<PostProps> = ({}) => {
     return <Box>{error.message}</Box>;
   }
 
-  let body: any;
-  if (fetching) {
-    body = <Spinner size={"xl"} />;
-  } else if (!data) {
-    body = <Box>貼文不存在···</Box>;
-  } else if (data && data.post) {
-    body = (
-      <>
-        <Heading mb={4}>{data.post.title}</Heading>
-        {data.post.text}
-      </>
+  const postQuery = data?.post
+  if (!fetching && !postQuery) {
+    // 如果請求資料結束後，沒有資料，回到上個節點
+    router.back();
+
+    // 意外錯誤處理 (偵錯用)
+    return (
+      <Layout>
+        <Box>貼文不存在或已遭刪除</Box>
+      </Layout>
     );
   }
 
   return (
     <Layout>
-      <Container>{body}</Container>
+      <Container>
+        {!postQuery ? null : (
+          <>
+            <DeleteAlertDialog
+              selectPost={postQuery}
+              hook={[isOpen, setIsOpen]}
+            />
+            <Heading mb={4}>{postQuery.title}</Heading>
+            <Box>{postQuery.text}</Box>
+            <EditDeleteButtons 
+              id={postQuery.id}
+              creatorId={postQuery.creator?.id}
+              onClick={() => {
+                setIsOpen(true)
+              }}
+            />
+          </>
+        )}
+      </Container>
     </Layout>
   );
 };
