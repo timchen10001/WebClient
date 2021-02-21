@@ -60,6 +60,7 @@ const Register: React.FC<registerProps> = ({}) => {
               name="username"
               label="使用者名稱"
               placeholder="使用者名稱長度需至少 3字元"
+              disabled={isSubmitting}
               required={true}
             />
             <Box mt={2}>
