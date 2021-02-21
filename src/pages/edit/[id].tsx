@@ -58,7 +58,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
             },
           });
 
-          router.push("/");
+          router.back();
         }}
       >
         {({ isSubmitting, handleChange }) => (
