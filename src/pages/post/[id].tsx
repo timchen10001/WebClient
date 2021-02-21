@@ -2,9 +2,10 @@ import { Box, Container, Heading } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { DeleteAlertDialog } from "../../components/DeleteAlertDialog";
+import { CustomAlertDialog } from "../../components/CustomAlertDialog";
 import { EditDeleteButtons } from "../../components/EditDeleteButtons";
 import { Layout } from "../../components/Layout";
+import { alertFields } from "../../constants";
 import { usePostQuery } from "../../generated/graphql";
 import { useGetPostIntId } from "../../hooks/useGetPostIntId";
 import { createUrqlClient } from "../../utils/createUrqlClient";
@@ -26,7 +27,7 @@ const Post: React.FC<PostProps> = ({}) => {
     return <Box>{error.message}</Box>;
   }
 
-  const postQuery = data?.post
+  const postQuery = data?.post;
   if (!fetching && !postQuery) {
     // 如果請求資料結束後，沒有資料，回到上個節點
     router.back();
@@ -44,17 +45,18 @@ const Post: React.FC<PostProps> = ({}) => {
       <Container>
         {!postQuery ? null : (
           <>
-            <DeleteAlertDialog
+            <CustomAlertDialog
+              fields={alertFields}
               selectPost={postQuery}
               hook={[isOpen, setIsOpen]}
             />
             <Heading mb={4}>{postQuery.title}</Heading>
             <Box>{postQuery.text}</Box>
-            <EditDeleteButtons 
+            <EditDeleteButtons
               id={postQuery.id}
               creatorId={postQuery.creator?.id}
               onClick={() => {
-                setIsOpen(true)
+                setIsOpen(true);
               }}
             />
           </>

@@ -1,11 +1,12 @@
 import { Button, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
-import { DeleteAlertDialog } from "../components/DeleteAlertDialog";
+import { CustomAlertDialog } from "../components/CustomAlertDialog";
 import { EditDeleteButtons } from "../components/EditDeleteButtons";
-import { PostSnippetSection } from "../components/PostSnippetSection";
 import { Layout } from "../components/Layout";
+import { PostSnippetSection } from "../components/PostSnippetSection";
 import { UpdootSection } from "../components/UpdootSection";
+import { alertFields } from "../constants";
 import {
   PaginatedPosts,
   PostSnippetFragment,
@@ -43,7 +44,11 @@ const Index = () => {
         Posts
       </Heading>
       <br />
-      <DeleteAlertDialog selectPost={selectPost} hook={[isOpen, setIsOpen]} />
+      <CustomAlertDialog
+        fields={alertFields}
+        selectPost={selectPost}
+        hook={[isOpen, setIsOpen]}
+      />
       {loadingPosts || !data?.posts ? (
         <Spinner size={"lg"} />
       ) : (

@@ -8,19 +8,27 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
-import { HookCallbacks } from "async_hooks";
-import React, { useState } from "react";
+import React from "react";
 import {
   PostSnippetFragment,
   useDeletePostMutation,
 } from "../generated/graphql";
 
-interface DeleteAlertDialogProps {
+export type AlertDialogField = {
+  header: string;
+  body: any;
+  comfirm: string;
+  cancel: string;
+};
+
+interface CustomAlertDialogProps {
+  fields: AlertDialogField;
   selectPost: PostSnippetFragment;
   hook: any;
 }
 
-export const DeleteAlertDialog: React.FC<DeleteAlertDialogProps> = ({
+export const CustomAlertDialog: React.FC<CustomAlertDialogProps> = ({
+  fields,
   selectPost,
   hook,
 }) => {
@@ -37,11 +45,11 @@ export const DeleteAlertDialog: React.FC<DeleteAlertDialogProps> = ({
       <AlertDialogOverlay>
         <AlertDialogContent bgColor="lightgray">
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            刪除貼文警告
+            {fields.header}
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            確定刪除這則貼文？
+            {fields.body}
             <Text mt={2} fontSize="xx-small">
               {selectPost.title}
             </Text>
@@ -49,7 +57,7 @@ export const DeleteAlertDialog: React.FC<DeleteAlertDialogProps> = ({
 
           <AlertDialogFooter>
             <Button ref={undefined} onClick={onClose}>
-              取消
+              {fields.cancel}
             </Button>
             <Button
               ml={3}
@@ -60,12 +68,11 @@ export const DeleteAlertDialog: React.FC<DeleteAlertDialogProps> = ({
                   id: selectPost.id,
                 });
                 if (success) {
-                  console.log("確認刪除: ", selectPost);
                   onClose();
                 }
               }}
             >
-              刪除
+              {fields.comfirm}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
