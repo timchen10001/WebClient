@@ -1,7 +1,7 @@
 import { dedupExchange, fetchExchange, stringifyVariables } from "@urql/core";
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import gql from "graphql-tag";
-import { NextUrqlContext, SSRExchange } from "next-urql";
+import { SSRExchange } from "next-urql";
 import Router from "next/router";
 import { ClientOptions, Exchange } from "urql";
 import { pipe, tap } from "wonka";
@@ -12,7 +12,6 @@ import {
   MeDocument,
   MeQuery,
   RegisterMutation,
-  UpdatePostMutationVariables,
   VoteMutationVariables,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
@@ -160,7 +159,6 @@ export const createUrqlClient = (
         },
         updates: {
           Mutation: {
-
             deletePost: (_result, args, cache, info) => {
               cache.invalidate({
                 __typename: "Post",
