@@ -2,7 +2,8 @@ import { Button, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
 import { DeleteAlertDialog } from "../components/DeleteAlertDialog";
-import { EditDeletePostSection } from "../components/EditDeletePostSection";
+import { EditDeleteButtons } from "../components/EditDeleteButtons";
+import { PostSnippetSection } from "../components/PostSnippetSection";
 import { Layout } from "../components/Layout";
 import { UpdootSection } from "../components/UpdootSection";
 import {
@@ -26,11 +27,11 @@ const Index = () => {
   } as PostSnippetFragment);
   const [isOpen, setIsOpen] = useState(false);
 
-  const [{ data, fetching, error }] = usePostsQuery({
+  const [{ data, fetching: loadingPosts, error }] = usePostsQuery({
     pause: isServer(),
     variables,
   });
-  const moreFetching = useIsPaginating([data]);
+  const [moreFetching, setMoreFetching] = useIsPaginating([data]);
 
   if (error) {
     return <div>錯誤 404</div>;
@@ -43,7 +44,7 @@ const Index = () => {
       </Heading>
       <br />
       <DeleteAlertDialog selectPost={selectPost} hook={[isOpen, setIsOpen]} />
-      {fetching || !data?.posts ? (
+      {loadingPosts || !data?.posts ? (
         <Spinner size={"lg"} />
       ) : (
         <Stack spacing={8}>
@@ -51,8 +52,10 @@ const Index = () => {
             !p ? null : (
               <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
                 <UpdootSection post={p} />
-                <EditDeletePostSection
-                  post={p}
+                <PostSnippetSection post={p} />
+                <EditDeleteButtons
+                  id={p.id}
+                  creatorId={p.creator?.id}
                   onClick={() => {
                     setSelectPost(p);
                     setIsOpen(true);
@@ -73,13 +76,13 @@ const Index = () => {
             isLoading={moreFetching}
             onClick={() => {
               const { posts } = data.posts as PaginatedPosts;
-              let size: number = posts.length - 1;
+              const size = posts.length - 1;
               const lastPostInPagination = posts[size];
-              // console.log(lastPostInPagination);
               setVariables({
                 limit: variables.limit,
                 cursor: lastPostInPagination?.createdAt,
               });
+              setMoreFetching(false);
             }}
           >
             更多
