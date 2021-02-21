@@ -35,7 +35,7 @@ const Index = () => {
   const [moreFetching, setMoreFetching] = useIsPaginating([data]);
 
   if (error) {
-    return <div>錯誤 404</div>;
+    return <div>{error}</div>;
   }
 
   return (
