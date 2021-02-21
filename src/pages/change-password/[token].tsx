@@ -57,11 +57,11 @@ const ChangePassword: NextPage<{ token: string }> = ({}) => {
               name="newPassword"
               label="新的密碼"
               placeholder="密碼長度不得低於 6 個字元"
-              required={true}
               type="password"
+              autoComplete="new-password"
               disabled={isSubmitting || tokenExpried}
               clearValue={tokenExpried}
-              autoComplete="new-password"
+              required={true}
             />
             <Box mt={4}>
               <InputField
