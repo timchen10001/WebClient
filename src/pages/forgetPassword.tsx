@@ -1,9 +1,10 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
-import React, { useEffect, useState } from "react";
+import NextLink from "next/link";
+import React, { useState } from "react";
+import { FixPageLayout } from "../components/FixPageLayout";
 import { InputField } from "../components/InputField";
-import { Wrapper } from "../components/Wrapper";
 import { useForgetPasswordMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { emailExamination } from "../utils/emailExamination";
@@ -16,7 +17,7 @@ const ForgetPassword: React.FC<forgetPasswordProps> = ({}) => {
   const [tokenSend, setTokenSend] = useState(false);
 
   return (
-    <Wrapper variant="small">
+    <FixPageLayout variant="small">
       <Formik
         initialValues={{ email: "" }}
         onSubmit={async (values, { setErrors }) => {
@@ -36,9 +37,20 @@ const ForgetPassword: React.FC<forgetPasswordProps> = ({}) => {
       >
         {({ isSubmitting, handleChange }) =>
           tokenSend ? (
-            <Box style={{ color: "red", fontSize: "small" }}>
-              密碼重設認證已寄送至信箱
-            </Box>
+            <>
+              <Box style={{ color: "red", fontSize: "small" }}>
+                密碼重設認證已寄送至信箱
+              </Box>
+              <br />
+              <Flex>
+                <NextLink href="/">
+                  <Link colorScheme="blue">回主頁</Link>
+                </NextLink>
+                <NextLink href="/login">
+                  <Link ml={2}>登入</Link>
+                </NextLink>
+              </Flex>
+            </>
           ) : (
             <Form>
               <InputField
@@ -62,7 +74,7 @@ const ForgetPassword: React.FC<forgetPasswordProps> = ({}) => {
           )
         }
       </Formik>
-    </Wrapper>
+    </FixPageLayout>
   );
 };
 

@@ -16,9 +16,10 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  me?: Maybe<User>;
+  receives?: Maybe<Array<Friend>>;
   post?: Maybe<Post>;
   posts: PaginatedPosts;
+  me?: Maybe<User>;
 };
 
 
@@ -32,6 +33,13 @@ export type QueryPostsArgs = {
   limit: Scalars['Int'];
 };
 
+export type Friend = {
+  __typename?: 'Friend';
+  ID: Scalars['Float'];
+  name: Scalars['String'];
+  user: User;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['Float'];
@@ -39,6 +47,7 @@ export type User = {
   email: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  friends?: Maybe<Array<Friend>>;
 };
 
 export type Post = {
@@ -49,7 +58,7 @@ export type Post = {
   points: Scalars['Float'];
   voteStatus?: Maybe<Scalars['Int']>;
   creatorId: Scalars['Float'];
-  creator?: Maybe<User>;
+  creator: User;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   textSnippet: Scalars['String'];
@@ -63,15 +72,56 @@ export type PaginatedPosts = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  respondToReceive: Scalars['Boolean'];
+  invite: InvitationResponse;
+  deleteFriend: Scalars['Boolean'];
+  createPost: Post;
+  updatePost?: Maybe<Post>;
+  deletePost: Scalars['Boolean'];
+  vote: Scalars['Boolean'];
   changePassword: UserResponse;
   forgetPassword: Scalars['Boolean'];
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
-  vote: Scalars['Boolean'];
-  createPost: Post;
-  updatePost?: Maybe<Post>;
-  deletePost: Scalars['Boolean'];
+};
+
+
+export type MutationRespondToReceiveArgs = {
+  value: Scalars['Int'];
+  inviterId: Scalars['Int'];
+};
+
+
+export type MutationInviteArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteFriendArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type MutationCreatePostArgs = {
+  input: InputPost;
+};
+
+
+export type MutationUpdatePostArgs = {
+  input: InputPost;
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeletePostArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationVoteArgs = {
+  value: Scalars['Int'];
+  postId: Scalars['Int'];
 };
 
 
@@ -96,32 +146,10 @@ export type MutationLoginArgs = {
   usernameOrEmail: Scalars['String'];
 };
 
-
-export type MutationVoteArgs = {
-  value: Scalars['Int'];
-  postId: Scalars['Int'];
-};
-
-
-export type MutationCreatePostArgs = {
-  input: InputPost;
-};
-
-
-export type MutationUpdatePostArgs = {
-  input: InputPost;
-  id: Scalars['Int'];
-};
-
-
-export type MutationDeletePostArgs = {
-  id: Scalars['Int'];
-};
-
-export type UserResponse = {
-  __typename?: 'UserResponse';
+export type InvitationResponse = {
+  __typename?: 'InvitationResponse';
   errors?: Maybe<Array<FieldError>>;
-  user?: Maybe<User>;
+  done?: Maybe<Scalars['Boolean']>;
 };
 
 export type FieldError = {
@@ -130,16 +158,27 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type InputPost = {
+  title: Scalars['String'];
+  text: Scalars['String'];
+};
+
+export type UserResponse = {
+  __typename?: 'UserResponse';
+  errors?: Maybe<Array<FieldError>>;
+  user?: Maybe<User>;
+};
+
 export type UsernameEmailPassword = {
   username: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
 };
 
-export type InputPost = {
-  title: Scalars['String'];
-  text: Scalars['String'];
-};
+export type FriendSnippetFragment = (
+  { __typename?: 'Friend' }
+  & Pick<Friend, 'ID' | 'name'>
+);
 
 export type PostEditSnippetFragment = (
   { __typename?: 'Post' }
@@ -149,10 +188,10 @@ export type PostEditSnippetFragment = (
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
   & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'voteStatus' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
-  & { creator?: Maybe<(
+  & { creator: (
     { __typename?: 'User' }
     & RegularCreatorFragment
-  )> }
+  ) }
 );
 
 export type RegularCreatorFragment = (
@@ -168,6 +207,10 @@ export type RegularErrorFragment = (
 export type RegularUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+  & { friends?: Maybe<Array<(
+    { __typename?: 'Friend' }
+    & FriendSnippetFragment
+  )>> }
 );
 
 export type ChangePasswordMutationVariables = Exact<{
@@ -270,6 +313,17 @@ export type RegisterMutation = (
   ) }
 );
 
+export type ResponseToReceiveMutationVariables = Exact<{
+  inviterId: Scalars['Int'];
+  value: Scalars['Int'];
+}>;
+
+
+export type ResponseToReceiveMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'respondToReceive'>
+);
+
 export type UpdatePostMutationVariables = Exact<{
   id: Scalars['Int'];
   input: InputPost;
@@ -338,6 +392,17 @@ export type PostsQuery = (
   ) }
 );
 
+export type ReceivesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ReceivesQuery = (
+  { __typename?: 'Query' }
+  & { receives?: Maybe<Array<(
+    { __typename?: 'Friend' }
+    & FriendSnippetFragment
+  )>> }
+);
+
 export const PostEditSnippetFragmentDoc = gql`
     fragment PostEditSnippet on Post {
   title
@@ -374,15 +439,24 @@ export const RegularErrorFragmentDoc = gql`
   message
 }
     `;
+export const FriendSnippetFragmentDoc = gql`
+    fragment FriendSnippet on Friend {
+  ID
+  name
+}
+    `;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
   username
   email
+  friends {
+    ...FriendSnippet
+  }
   createdAt
   updatedAt
 }
-    `;
+    ${FriendSnippetFragmentDoc}`;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($token: String!, $newPassword: String!) {
   changePassword(token: $token, newPassword: $newPassword) {
@@ -472,6 +546,15 @@ ${RegularUserFragmentDoc}`;
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
+export const ResponseToReceiveDocument = gql`
+    mutation ResponseToReceive($inviterId: Int!, $value: Int!) {
+  respondToReceive(inviterId: $inviterId, value: $value)
+}
+    `;
+
+export function useResponseToReceiveMutation() {
+  return Urql.useMutation<ResponseToReceiveMutation, ResponseToReceiveMutationVariables>(ResponseToReceiveDocument);
+};
 export const UpdatePostDocument = gql`
     mutation UpdatePost($id: Int!, $input: InputPost!) {
   updatePost(id: $id, input: $input) {
@@ -528,4 +611,15 @@ export const PostsDocument = gql`
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
+};
+export const ReceivesDocument = gql`
+    query Receives {
+  receives {
+    ...FriendSnippet
+  }
+}
+    ${FriendSnippetFragmentDoc}`;
+
+export function useReceivesQuery(options: Omit<Urql.UseQueryArgs<ReceivesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ReceivesQuery>({ query: ReceivesDocument, ...options });
 };

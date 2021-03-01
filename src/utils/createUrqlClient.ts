@@ -23,12 +23,16 @@ const errorExchange: Exchange = ({ forward }) => (ops$) => {
     forward(ops$),
     tap(async ({ error }) => {
       if (error?.message.includes("尚未登入")) {
-        console.log("尚未登入！");
+        console.log("您尚未登入！");
         Router.replace("/login");
+      } else if (error?.message.includes("已登入")) {
+        console.log("您已登入 !");
+        Router.replace("/");
       }
     })
   );
 };
+
 
 const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
@@ -140,8 +144,9 @@ export const createUrqlClient = (
   if (isServer()) {
     cookie = ctx?.req.headers.cookie;
   }
+
   return {
-    url: "http://localhost:4000/graphql",
+    url: process.env.NEXT_PUBLIC_API_URL as string,
     fetchOptions: {
       credentials: "include" as const,
       headers: cookie ? { cookie } : undefined,
@@ -151,10 +156,12 @@ export const createUrqlClient = (
       cacheExchange({
         keys: {
           PaginatedPosts: () => null,
+          Friend: () => null,
         },
         resolvers: {
           Query: {
             posts: cursorPagination(),
+            // receives: invitationReceives(),
           },
         },
         updates: {
@@ -206,6 +213,10 @@ export const createUrqlClient = (
               }
             },
 
+            respondToReceive: (_result, args, cache, info) => {
+              reRenderFieldsByCache(cache, "Query", "receives");
+            },
+
             createPost: (_result, args, cache, info) => {
               reRenderFieldsByCache(cache, "Query", "posts");
               // cache.invalidate({ __typename: "PaginatedPosts" });
@@ -223,6 +234,7 @@ export const createUrqlClient = (
                   return { me: result.login.user };
                 }
               );
+              reRenderFieldsByCache(cache, "Query", "receives");
               reRenderFieldsByCache(cache, "Query", "posts");
             },
 
@@ -247,7 +259,6 @@ export const createUrqlClient = (
                 _result,
                 () => ({ me: null })
               );
-              reRenderFieldsByCache(cache, "Query", "posts");
             },
           },
         },

@@ -2,6 +2,7 @@ fragment RegularUser on User {
     id
     username
     email
+    friends { ...FriendSnippet }
     createdAt
     updatedAt
 }

@@ -35,7 +35,6 @@ export const CustomAlertDialog: React.FC<CustomAlertDialogProps> = ({
   const [{ fetching: deletingPost }, deletePost] = useDeletePostMutation();
   const [isOpen, setIsOpen] = hook;
   const onClose = () => setIsOpen(false);
-  const onOpen = () => setIsOpen(true);
   return (
     <AlertDialog
       isOpen={isOpen}

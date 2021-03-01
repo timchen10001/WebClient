@@ -1,10 +1,9 @@
-import { Button, Flex, Heading, Spinner, Stack } from "@chakra-ui/react";
+import { Button, Flex, Spinner, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CustomAlertDialog } from "../components/CustomAlertDialog";
 import { EditDeleteButtons } from "../components/EditDeleteButtons";
 import { Layout } from "../components/Layout";
-import { PaginateButton } from "../components/PaginateButton";
 import { PostSnippetSection } from "../components/PostSnippetSection";
 import { UpdootSection } from "../components/UpdootSection";
 import { alertFields } from "../constants";
@@ -14,6 +13,7 @@ import {
   usePostsQuery,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { getNewCursor } from "../utils/getNewCursor";
 import { isServer } from "../utils/isServer";
 import { sleep } from "../utils/sleep";
 
@@ -50,17 +50,20 @@ const Index = () => {
         selectPost={selectPost}
         hook={[isOpen, setIsOpen]}
       />
-      <Heading as="h1" size="4xl">
-        Posts
-      </Heading>
-      <br />
       {postFetching || !postsQuery ? (
         <Spinner size={"lg"} />
       ) : (
-        <Stack spacing={8}>
+        <Stack spacing={4}>
           {posts?.map((p) =>
             !p ? null : (
-              <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
+              <Flex
+                key={p.id}
+                p={5}
+                shadow="md"
+                borderWidth="1px"
+                bgColor="#f9f7f7"
+                borderRadius="lg"
+              >
                 <UpdootSection post={p} />
                 <PostSnippetSection post={p} />
                 <EditDeleteButtons
@@ -78,29 +81,27 @@ const Index = () => {
       )}
       {!hasMore ? null : (
         <Flex>
-        <Button
-          m="auto"
-          my="8"
-          size="sm"
-          style={{ backgroundColor: "#dadcea" }}
-          isLoading={moreFetching}
-          onClick={async() => {
-            setMoreFetching(true);
-            const size = posts.length - 1;
-            const lastPostInPagination = posts[size];
-            setVariables({
-              limit: variables.limit,
-              cursor: lastPostInPagination?.createdAt,
-            });
-            await sleep(2000)
-            setMoreFetching(false);
-          }}
-        >
-          更多
-        </Button>
-      </Flex>
+          <Button
+            m="auto"
+            my="5"
+            size="sm"
+            style={{ backgroundColor: "#dadcea" }}
+            isLoading={moreFetching}
+            onClick={async () => {
+              setMoreFetching(true);
+              const newCursor = getNewCursor(posts);
+              setVariables({
+                limit: variables.limit,
+                cursor: newCursor,
+              });
+              await sleep(2000);
+              setMoreFetching(false);
+            }}
+          >
+            更多
+          </Button>
+        </Flex>
       )}
-      <br />
     </Layout>
   );
 };

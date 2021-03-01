@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { CustomAlertDialog } from "../../components/CustomAlertDialog";
 import { EditDeleteButtons } from "../../components/EditDeleteButtons";
+import { FixPageLayout } from "../../components/FixPageLayout";
 import { Layout } from "../../components/Layout";
 import { alertFields } from "../../constants";
 import { usePostQuery } from "../../generated/graphql";
@@ -41,8 +42,8 @@ const Post: React.FC<PostProps> = ({}) => {
   }
 
   return (
-    <Layout>
-      <Container>
+    <FixPageLayout variant="regular">
+      <Container bgColor="#f9f7f7" borderRadius="lg" p={4} minHeight={"60vh"}>
         {!postQuery ? null : (
           <>
             <CustomAlertDialog
@@ -62,7 +63,7 @@ const Post: React.FC<PostProps> = ({}) => {
           </>
         )}
       </Container>
-    </Layout>
+    </FixPageLayout>
   );
 };
 
