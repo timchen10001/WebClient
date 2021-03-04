@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Image,
+  Text,
+} from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
@@ -73,7 +81,29 @@ const Login: React.FC<loginProps> = ({}) => {
                   送出
                 </Button>
               </Flex>
-              <Flex mt={6} mb={-5}>
+              <Flex mt={4}>
+                <NextLink href={`${process.env.NEXT_PUBLIC_OAUTH_URL}/google`}>
+                  <Button
+                    variant="unstyled"
+                    flex={1}
+                    bgColor="#F53E29"
+                    color="white"
+                    _focus={{ border: "none" }}
+                  >
+                    <Flex alignItems="center" justifyContent="center">
+                      <Image
+                        src={
+                          "https://res.cloudinary.com/dunc6xvuh/image/upload/v1614853664/material/google_ivvqdm.png"
+                        }
+                        boxSize={"9"}
+                        mr={1}
+                      />
+                      Google+
+                    </Flex>
+                  </Button>
+                </NextLink>
+              </Flex>
+              <Flex mt={3} mb={-6}>
                 <NextLink href="/forgetPassword">
                   <Link m="auto" color="red" textDecoration="underline">
                     忘記密碼?

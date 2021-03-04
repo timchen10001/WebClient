@@ -8,7 +8,7 @@ export const Footer: React.FC<FooterProps> = ({}) => {
     <Flex justifyContent="center" pb={12}>
       <Box m="auto">
         © Powered by{" "}
-        <Link as="a" href="https://github.com/timchen10001" textDecoration="underline">
+        <Link as="a" href="https://github.com/timchen10001" textDecoration="underline" _focus={{ border: "none" }}>
           Tim Chen
         </Link>
       </Box>

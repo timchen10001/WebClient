@@ -33,7 +33,6 @@ const errorExchange: Exchange = ({ forward }) => (ops$) => {
   );
 };
 
-
 const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
     const { parentKey: entityKey, fieldName } = info;
@@ -259,6 +258,7 @@ export const createUrqlClient = (
                 _result,
                 () => ({ me: null })
               );
+              reRenderFieldsByCache(cache, "Query", "posts");
             },
           },
         },

@@ -63,7 +63,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 
   return (
     <Box
-      bg={"Highlight"}
+      bg={"#9ec9f7"}
       position="sticky"
       zIndex="1"
       top="0"
@@ -79,7 +79,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             variant="solid"
             _focus={{ border: "none" }}
           >
-            <Heading size="lg" fontFamily={"serif"}>
+            <Heading size="lg" fontFamily={"serif"} color="black">
               anotherbush
             </Heading>
           </Button>

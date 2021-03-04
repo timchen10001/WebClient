@@ -10,7 +10,9 @@ interface PostSnippetSectionProps {
 export const PostSnippetSection: React.FC<PostSnippetSectionProps> = ({
   post,
 }) => {
-  const { id, title, text, creator, textSnippet } = post;
+  const { id, title, text, createdAt, textSnippet } = post;
+
+  const currentDate = new Date(parseInt(createdAt));
 
   return (
     <Box flex={1}>
@@ -20,7 +22,7 @@ export const PostSnippetSection: React.FC<PostSnippetSectionProps> = ({
         </Link>
       </NextLink>
       <Text color="gray" fontSize="sm">
-        posted by {creator?.username}
+        {currentDate.toLocaleTimeString()}
       </Text>
       <Flex align="center" mt={4}>
         <Text flex={1}>

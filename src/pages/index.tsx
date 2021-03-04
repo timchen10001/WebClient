@@ -1,4 +1,12 @@
-import { Button, Flex, Spinner, Stack } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Spinner,
+  Stack,
+  Image,
+  Box,
+  Heading,
+} from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
 import { CustomAlertDialog } from "../components/CustomAlertDialog";
@@ -51,29 +59,59 @@ const Index = () => {
         hook={[isOpen, setIsOpen]}
       />
       {postFetching || !postsQuery ? (
-        <Spinner size={"lg"} />
+        <Flex alignItems="center">
+          <Spinner m="auto" size={"lg"} />
+        </Flex>
       ) : (
         <Stack spacing={4}>
-          {posts?.map((p) =>
+          {posts?.map((p, idx) =>
             !p ? null : (
               <Flex
-                key={p.id}
-                p={5}
+                key={`post-${idx}`}
+                direction="column"
+                alignItems="center"
+                p={6}
                 shadow="md"
                 borderWidth="1px"
                 bgColor="#f9f7f7"
                 borderRadius="lg"
               >
-                <UpdootSection post={p} />
-                <PostSnippetSection post={p} />
-                <EditDeleteButtons
-                  id={p.id}
-                  creatorId={p.creator?.id}
-                  onClick={() => {
-                    setSelectPost(p);
-                    setIsOpen(true);
-                  }}
-                />
+                <Flex mr="auto" alignItems="center" px={2}>
+                  <Image
+                    boxSize="2.5rem"
+                    borderRadius="full"
+                    src={
+                      !p.creator.avator
+                        ? "https://placekitten.com/100/100"
+                        : p.creator.avator
+                    }
+                    alt="Fluffybuns the destroyer"
+                    mr="12px"
+                  />
+                  <Heading fontSize="lg">{p.creator.username}</Heading>
+                </Flex>
+                <Flex key={p.id} minW="100%" mt={3} px={3}>
+                  <UpdootSection post={p} />
+                  <Box ml={3}>
+                    <PostSnippetSection post={p} />
+                  </Box>
+                  <EditDeleteButtons
+                    id={p.id}
+                    creatorId={p.creator?.id}
+                    onClick={() => {
+                      setSelectPost(p);
+                      setIsOpen(true);
+                    }}
+                  />
+                </Flex>
+                {!p.images ? null : (
+                  <Image
+                    mt={5}
+                    borderRadius="md"
+                    src={p.images}
+                    maxHeight="500px"
+                  />
+                )}
               </Flex>
             )
           )}

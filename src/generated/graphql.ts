@@ -37,17 +37,6 @@ export type Friend = {
   __typename?: 'Friend';
   ID: Scalars['Float'];
   name: Scalars['String'];
-  user: User;
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['Float'];
-  username: Scalars['String'];
-  email: Scalars['String'];
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
-  friends?: Maybe<Array<Friend>>;
 };
 
 export type Post = {
@@ -57,11 +46,23 @@ export type Post = {
   text: Scalars['String'];
   points: Scalars['Float'];
   voteStatus?: Maybe<Scalars['Int']>;
+  images?: Maybe<Scalars['String']>;
   creatorId: Scalars['Float'];
   creator: User;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   textSnippet: Scalars['String'];
+};
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['Float'];
+  avator: Scalars['String'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  friends?: Maybe<Array<Friend>>;
 };
 
 export type PaginatedPosts = {
@@ -161,6 +162,7 @@ export type FieldError = {
 export type InputPost = {
   title: Scalars['String'];
   text: Scalars['String'];
+  images?: Maybe<Scalars['String']>;
 };
 
 export type UserResponse = {
@@ -182,12 +184,12 @@ export type FriendSnippetFragment = (
 
 export type PostEditSnippetFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'title' | 'text' | 'textSnippet'>
+  & Pick<Post, 'title' | 'text' | 'images' | 'textSnippet'>
 );
 
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'voteStatus' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
+  & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'voteStatus' | 'images' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
   & { creator: (
     { __typename?: 'User' }
     & RegularCreatorFragment
@@ -196,7 +198,7 @@ export type PostSnippetFragment = (
 
 export type RegularCreatorFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'email'>
+  & Pick<User, 'id' | 'avator' | 'username' | 'email'>
 );
 
 export type RegularErrorFragment = (
@@ -206,7 +208,7 @@ export type RegularErrorFragment = (
 
 export type RegularUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+  & Pick<User, 'id' | 'username' | 'email' | 'avator' | 'createdAt' | 'updatedAt'>
   & { friends?: Maybe<Array<(
     { __typename?: 'Friend' }
     & FriendSnippetFragment
@@ -407,12 +409,14 @@ export const PostEditSnippetFragmentDoc = gql`
     fragment PostEditSnippet on Post {
   title
   text
+  images
   textSnippet
 }
     `;
 export const RegularCreatorFragmentDoc = gql`
     fragment RegularCreator on User {
   id
+  avator
   username
   email
 }
@@ -424,6 +428,7 @@ export const PostSnippetFragmentDoc = gql`
   text
   points
   voteStatus
+  images
   creatorId
   creator {
     ...RegularCreator
@@ -450,6 +455,7 @@ export const RegularUserFragmentDoc = gql`
   id
   username
   email
+  avator
   friends {
     ...FriendSnippet
   }

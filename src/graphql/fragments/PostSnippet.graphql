@@ -4,6 +4,7 @@ fragment PostSnippet on Post {
   text
   points
   voteStatus
+  images
   creatorId
   creator { ...RegularCreator }
   createdAt

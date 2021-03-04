@@ -15,7 +15,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
   const { id: postId, voteStatus } = post;
 
   const bgc = "#f2f2f2";
-  const updootBgc = voteStatus === 1 ? "lightgreen" : bgc;
+  const updootBgc = voteStatus === 1 ? "#9ec9f7" : bgc;
   const downdoorBgc = voteStatus === -1 ? "red" : bgc;
 
   return (
@@ -26,7 +26,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
       mr={4}
     >
       <IconButton
-        size="sm"
+        size="xs"
         aria-label="updoot post"
         icon={<TriangleUpIcon />}
         style={{ backgroundColor: updootBgc }}
@@ -39,7 +39,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
       />
       {post.points}
       <IconButton
-        size="sm"
+        size="xs"
         aria-label="downdoot post"
         icon={<TriangleDownIcon focusable="false" />}
         style={{ backgroundColor: downdoorBgc }}
