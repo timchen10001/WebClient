@@ -3,7 +3,7 @@ fragment RegularUser on User {
     username
     email
     avator
-    friends { ...FriendSnippet }
+    friends { ID name }
     createdAt
     updatedAt
 }

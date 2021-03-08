@@ -1,26 +1,22 @@
 import { Box, Flex, Heading, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
-import { Footer } from "./Footer";
-import { Wrapper, WrapperVariant } from "./Wrapper";
+import { Footer } from "../components/Footer";
+import { Wrapper } from "../components/Wrapper";
 
-interface FixPageLayoutProps {
-  variant: WrapperVariant;
-}
+interface FixPageLayoutProps {}
 
-export const FixPageLayout: React.FC<FixPageLayoutProps> = ({
-  variant,
-  children,
-}) => {
+export const FixPageLayout: React.FC<FixPageLayoutProps> = ({ children }) => {
   return (
-    <Box bgColor="#e5e6ea" minHeight="100vh">
+    <Box minHeight="100vh">
       <Box
-        position={"sticky"}
-        zIndex={1}
-        bgColor="Highlight"
         p={6}
-        borderBottomRadius="lg"
+        top={0}
+        zIndex={1}
         boxShadow="md"
+        position={"sticky"}
+        bgColor="Highlight"
+        borderBottomRadius="lg"
       >
         <Flex flex={1} m="auto" maxWidth={800}>
           <NextLink href="/">
@@ -30,7 +26,7 @@ export const FixPageLayout: React.FC<FixPageLayoutProps> = ({
           </NextLink>
         </Flex>
       </Box>
-      <Wrapper variant={variant}>{children}</Wrapper>
+      <Wrapper variant="mobile">{children}</Wrapper>
       <Box mt={6}>
         <Footer />
       </Box>

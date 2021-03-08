@@ -4,7 +4,7 @@ import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
-import { Layout } from "../../components/Layout";
+import { Layout } from "../../layouts/Layout";
 import { usePostQuery, useUpdatePostMutation } from "../../generated/graphql";
 import { useGetPostIntId } from "../../hooks/useGetPostIntId";
 import { createUrqlClient } from "../../utils/createUrqlClient";
@@ -29,10 +29,12 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
   if (error) {
     body = <Box>{error.message}</Box>;
   } else if (fetching) {
-    body = <Spinner size={"xl"} />;
-  } else if (!data?.post) {
-    body = <Box>貼文不存在···</Box>;
-  } else if (data.post) {
+    body = (
+      <Flex alignItems="center">
+        <Spinner size={"xl"} m="auto"/>
+      </Flex>
+    );
+  } else if (data?.post) {
     body = (
       <Formik
         initialValues={{ title: data.post.title, text: data.post.text }}
@@ -48,10 +50,10 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
             setEditing(false);
             return;
           }
-
           await updatePost({
             id: intId,
             input: {
+              images: data.post?.images as string,
               ...values,
             },
           });
@@ -90,7 +92,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
   }
 
   return (
-    <Layout variant="regular">
+    <Layout>
       <Box bgColor="#f9f7f7" borderRadius="lg" p={4}>
         {body}
       </Box>

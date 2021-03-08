@@ -37,7 +37,7 @@ export const MessengerControll: React.FC<MessengerControllProps> = ({}) => {
 
   return (
     <Box aria-label="通知">
-      <Menu>
+      <Menu placement="bottom">
         <MenuButton
           p={1}
           m={0}
@@ -49,11 +49,11 @@ export const MessengerControll: React.FC<MessengerControllProps> = ({}) => {
           <BellIcon fontSize="xl" />
           {!withMessenge ? null : (
             <Icon
-              viewBox="0 0 200 200"
-              color="red.500"
-              fontSize={"xx-small"}
               mb={4}
               ml={-1}
+              viewBox="0 0 200 200"
+              color="red.500"
+              fontSize="xx-small"
             >
               <path
                 fill="currentColor"
@@ -63,7 +63,7 @@ export const MessengerControll: React.FC<MessengerControllProps> = ({}) => {
           )}
         </MenuButton>
 
-        <MenuList bgColor="ActiveBorder" cursor="text">
+        <MenuList bgColor="ActiveBorder" cursor="text" shadow="md">
           {!withMessenge ? (
             <MenuItem minH="48px">
               <TimeIcon mr={2} />

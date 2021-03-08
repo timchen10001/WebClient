@@ -23,7 +23,8 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
       flexDirection={"column"}
       alignItems="center"
       justifyContent="center"
-      mr={4}
+      ml={.5}
+      mr={3}
     >
       <IconButton
         size="xs"

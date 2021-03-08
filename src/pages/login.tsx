@@ -1,18 +1,10 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Link,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Image, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { FixPageLayout } from "../components/FixPageLayout";
+import { FixPageLayout } from "../layouts/FixPageLayout";
 import { InputField } from "../components/InputField";
 import { useLoginMutation } from "../generated/graphql";
 import { useIsLogin } from "../hooks/useIsLogin";
@@ -27,7 +19,7 @@ const Login: React.FC<loginProps> = ({}) => {
   const [{ fetching }, login] = useLoginMutation();
 
   return (
-    <FixPageLayout variant="small">
+    <FixPageLayout>
       <Box bgColor="#f9f7f7" borderRadius="lg" p={10} mt={-3}>
         <Heading fontFamily="fantasy" fontSize="3xl">
           會員登入
@@ -81,29 +73,69 @@ const Login: React.FC<loginProps> = ({}) => {
                   送出
                 </Button>
               </Flex>
-              <Flex mt={4}>
+              <Flex
+                mt={6}
+                maxW="15rem"
+                alignItems="center"
+                justifyContent="space-around"
+                mx="auto"
+              >
                 <NextLink href={`${process.env.NEXT_PUBLIC_OAUTH_URL}/google`}>
                   <Button
                     variant="unstyled"
+                    maxWidth="fit-content"
                     flex={1}
-                    bgColor="#F53E29"
-                    color="white"
                     _focus={{ border: "none" }}
                   >
-                    <Flex alignItems="center" justifyContent="center">
-                      <Image
-                        src={
-                          "https://res.cloudinary.com/dunc6xvuh/image/upload/v1614853664/material/google_ivvqdm.png"
-                        }
-                        boxSize={"9"}
-                        mr={1}
-                      />
-                      Google+
-                    </Flex>
+                    <Image
+                      boxSize="9"
+                      alt="Google 登入"
+                      title="使用 Google 登入 anotherbush.com"
+                      src={
+                        "https://res.cloudinary.com/dunc6xvuh/image/upload/v1614944830/material/google-symbol_acleoo.png"
+                      }
+                    />
+                  </Button>
+                </NextLink>
+
+                <NextLink
+                  href={`${process.env.NEXT_PUBLIC_OAUTH_URL}/facebook`}
+                >
+                  <Button
+                    variant="unstyled"
+                    flex={1}
+                    maxWidth="fit-content"
+                    _focus={{ border: "none" }}
+                  >
+                    <Image
+                      boxSize="9"
+                      alt="Facebook 登入"
+                      title="使用 Facebook 登入 anotherbush.com"
+                      src={
+                        "https://res.cloudinary.com/dunc6xvuh/image/upload/v1614946075/material/facebook_1_j2etka.png"
+                      }
+                    />
+                  </Button>
+                </NextLink>
+                <NextLink href={`${process.env.NEXT_PUBLIC_OAUTH_URL}/twitter`}>
+                  <Button
+                    variant="unstyled"
+                    flex={1}
+                    maxWidth="fit-content"
+                    _focus={{ border: "none" }}
+                  >
+                    <Image
+                      boxSize="9"
+                      alt="Twitter 登入"
+                      title="使用 Twitter 登入 anotherbush.com"
+                      src={
+                        "https://res.cloudinary.com/dunc6xvuh/image/upload/v1614946082/material/twitter_jrdxsw.png"
+                      }
+                    />
                   </Button>
                 </NextLink>
               </Flex>
-              <Flex mt={3} mb={-6}>
+              <Flex mt={4} mb={-4}>
                 <NextLink href="/forgetPassword">
                   <Link m="auto" color="red" textDecoration="underline">
                     忘記密碼?
@@ -122,7 +154,7 @@ const Login: React.FC<loginProps> = ({}) => {
         justifyContent="center"
       >
         <Box>
-          沒有帳號？
+          沒有帳號嗎？
           <NextLink href="/register">
             <Link ml="auto" color="green" textDecoration="underline">
               註冊帳號

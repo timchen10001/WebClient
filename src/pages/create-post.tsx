@@ -5,10 +5,11 @@ import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
 import { InputField } from "../components/InputField";
-import { Layout } from "../components/Layout";
+import { Layout } from "../layouts/Layout";
 import { useCreatePostMutation } from "../generated/graphql";
 import { useIsAuth } from "../hooks/useIsAuth";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { getFormDataFromFileList } from "../utils/getFormDataFromFileList";
 import { postInputExamination } from "../utils/postInputExamination";
 import { toErrorsMap } from "../utils/toErrorsMap";
 import { uploadImage } from "../utils/uploadImage";
@@ -22,7 +23,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
 
   let imgFileList: any = [];
   return (
-    <Layout variant="regular">
+    <Layout>
       <Box bgColor="#f9f7f7" borderRadius="lg" p={4}>
         <Formik
           initialValues={{ postTitle: "", postText: "", interfaceFile: "" }}
@@ -41,17 +42,14 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
 
             let images = "";
             if (imgFileList.length !== 0) {
-              const formData = new FormData();
-              formData.append("image", imgFileList[0]);
+              const formData = getFormDataFromFileList(imgFileList, "image");
               try {
-                const imgInfo = await uploadImage(formData);
-                images = imgInfo.data.path;
+                images = await uploadImage(formData);
               } catch (err) {
                 console.log(err);
                 return;
               }
             }
-
             imgFileList = null;
 
             const { error } = await createPost({
@@ -85,6 +83,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
                   id="hiddenFile"
                   style={{ display: "none" }}
                   type="file"
+                  multiple={true}
                   name="image"
                   onChange={(e) => {
                     imgFileList = e.target.files;

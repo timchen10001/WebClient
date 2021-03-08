@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
-import { FixPageLayout } from "../components/FixPageLayout";
+import { FixPageLayout } from "../layouts/FixPageLayout";
 import { InputField } from "../components/InputField";
 import {
   useRegisterMutation,
@@ -21,7 +21,7 @@ const Register: React.FC<registerProps> = ({}) => {
   const [, register] = useRegisterMutation();
   const router = useRouter();
   return (
-    <FixPageLayout variant="small">
+    <FixPageLayout>
       <Box bgColor="#f9f7f7" borderRadius="lg" p={10} mt={-3}>
         <Heading fontFamily="fantasy" fontSize="3xl">
           會員註冊
@@ -68,7 +68,7 @@ const Register: React.FC<registerProps> = ({}) => {
               <InputField
                 name="username"
                 label="使用者名稱"
-                placeholder="使用者名稱長度需至少 3字元"
+                placeholder="使用者名稱長度需至少 3 字元"
                 autoComplete={"username"}
                 disabled={isSubmitting}
                 required={true}

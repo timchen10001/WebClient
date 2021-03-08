@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import React, { useState } from "react";
-import { FixPageLayout } from "../components/FixPageLayout";
+import { FixPageLayout } from "../layouts/FixPageLayout";
 import { InputField } from "../components/InputField";
 import { useForgetPasswordMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
@@ -17,7 +17,7 @@ const ForgetPassword: React.FC<forgetPasswordProps> = ({}) => {
   const [tokenSend, setTokenSend] = useState(false);
 
   return (
-    <FixPageLayout variant="small">
+    <FixPageLayout>
       <Box bgColor="#f9f7f7" borderRadius="lg" p={10} mt={-3}>
         <Formik
           initialValues={{ email: "" }}

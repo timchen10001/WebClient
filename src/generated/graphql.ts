@@ -46,7 +46,7 @@ export type Post = {
   text: Scalars['String'];
   points: Scalars['Float'];
   voteStatus?: Maybe<Scalars['Int']>;
-  images?: Maybe<Scalars['String']>;
+  images: Scalars['String'];
   creatorId: Scalars['Float'];
   creator: User;
   createdAt: Scalars['String'];
@@ -162,7 +162,7 @@ export type FieldError = {
 export type InputPost = {
   title: Scalars['String'];
   text: Scalars['String'];
-  images?: Maybe<Scalars['String']>;
+  images: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -211,7 +211,7 @@ export type RegularUserFragment = (
   & Pick<User, 'id' | 'username' | 'email' | 'avator' | 'createdAt' | 'updatedAt'>
   & { friends?: Maybe<Array<(
     { __typename?: 'Friend' }
-    & FriendSnippetFragment
+    & Pick<Friend, 'ID' | 'name'>
   )>> }
 );
 
@@ -266,6 +266,23 @@ export type ForgetPasswordMutationVariables = Exact<{
 export type ForgetPasswordMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'forgetPassword'>
+);
+
+export type InviteMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type InviteMutation = (
+  { __typename?: 'Mutation' }
+  & { invite: (
+    { __typename?: 'InvitationResponse' }
+    & Pick<InvitationResponse, 'done'>
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & RegularErrorFragment
+    )>> }
+  ) }
 );
 
 export type LoginMutationVariables = Exact<{
@@ -405,6 +422,12 @@ export type ReceivesQuery = (
   )>> }
 );
 
+export const FriendSnippetFragmentDoc = gql`
+    fragment FriendSnippet on Friend {
+  ID
+  name
+}
+    `;
 export const PostEditSnippetFragmentDoc = gql`
     fragment PostEditSnippet on Post {
   title
@@ -444,12 +467,6 @@ export const RegularErrorFragmentDoc = gql`
   message
 }
     `;
-export const FriendSnippetFragmentDoc = gql`
-    fragment FriendSnippet on Friend {
-  ID
-  name
-}
-    `;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
@@ -457,12 +474,13 @@ export const RegularUserFragmentDoc = gql`
   email
   avator
   friends {
-    ...FriendSnippet
+    ID
+    name
   }
   createdAt
   updatedAt
 }
-    ${FriendSnippetFragmentDoc}`;
+    `;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($token: String!, $newPassword: String!) {
   changePassword(token: $token, newPassword: $newPassword) {
@@ -508,6 +526,20 @@ export const ForgetPasswordDocument = gql`
 
 export function useForgetPasswordMutation() {
   return Urql.useMutation<ForgetPasswordMutation, ForgetPasswordMutationVariables>(ForgetPasswordDocument);
+};
+export const InviteDocument = gql`
+    mutation Invite($id: Int!) {
+  invite(id: $id) {
+    errors {
+      ...RegularError
+    }
+    done
+  }
+}
+    ${RegularErrorFragmentDoc}`;
+
+export function useInviteMutation() {
+  return Urql.useMutation<InviteMutation, InviteMutationVariables>(InviteDocument);
 };
 export const LoginDocument = gql`
     mutation Login($usernameOrEmail: String!, $password: String!) {
