@@ -1,5 +1,6 @@
 fragment RegularCreator on User {
     id
+    avator
     username
     email
 }

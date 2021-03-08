@@ -2,6 +2,8 @@ fragment RegularUser on User {
     id
     username
     email
+    avator
+    friends { ID name }
     createdAt
     updatedAt
 }

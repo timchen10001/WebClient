@@ -35,7 +35,6 @@ export const CustomAlertDialog: React.FC<CustomAlertDialogProps> = ({
   const [{ fetching: deletingPost }, deletePost] = useDeletePostMutation();
   const [isOpen, setIsOpen] = hook;
   const onClose = () => setIsOpen(false);
-  const onOpen = () => setIsOpen(true);
   return (
     <AlertDialog
       isOpen={isOpen}
@@ -43,26 +42,31 @@ export const CustomAlertDialog: React.FC<CustomAlertDialogProps> = ({
       onClose={onClose}
     >
       <AlertDialogOverlay>
-        <AlertDialogContent bgColor="lightgray">
+        <AlertDialogContent bgColor="white" m="auto" minW="40%">
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
             {fields.header}
           </AlertDialogHeader>
 
           <AlertDialogBody>
             {fields.body}
-            <Text mt={2} fontSize="xx-small">
+            <Text mt={4} fontSize="xx-small">
               {selectPost.title}
             </Text>
           </AlertDialogBody>
 
           <AlertDialogFooter>
-            <Button ref={undefined} onClick={onClose}>
+            <Button
+              ref={undefined}
+              onClick={onClose}
+              _focus={{ border: "none" }}
+            >
               {fields.cancel}
             </Button>
             <Button
               ml={3}
               colorScheme="red"
               isLoading={deletingPost}
+              _focus={{ border: "none" }}
               onClick={async () => {
                 const success = await deletePost({
                   id: selectPost.id,

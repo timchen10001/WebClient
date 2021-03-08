@@ -1,0 +1,8 @@
+mutation Invite($id: Int!) {
+  invite(id: $id) {
+    errors {
+      ...RegularError
+    }
+    done
+  }
+}

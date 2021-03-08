@@ -20,14 +20,14 @@ export const EditDeleteButtons: React.FC<EditDeleteButtonsProps> = ({
     typeof creatorId === "undefined" || meQuery?.me?.id !== creatorId;
 
   return isNotEditable ? null : (
-    <Flex align="center" ml="auto">
+    <Flex align="center" ml="auto" mt={-14}>
       <NextLink href="/edit/[id]" as={`/edit/${id}`}>
         <IconButton
           aria-label="修改貼文"
           icon={<EditIcon />}
           size={"sm"}
           bgColor={"#f2f2f2"}
-          _hover={{ bgColor: "lightgreen" }}
+          _hover={{ bgColor: "#9ec9f7" }}
         />
       </NextLink>
       <IconButton

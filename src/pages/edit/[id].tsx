@@ -1,14 +1,12 @@
-import { Box, Button, Spinner } from "@chakra-ui/react";
+import { Box, Button, Flex, Spinner } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
-import { Layout } from "../../components/Layout";
+import { Layout } from "../../layouts/Layout";
 import { usePostQuery, useUpdatePostMutation } from "../../generated/graphql";
-import {
-  useGetPostIntId,
-} from "../../hooks/useGetPostIntId";
+import { useGetPostIntId } from "../../hooks/useGetPostIntId";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { postInputExamination } from "../../utils/postInputExamination";
 import { toErrorsMap } from "../../utils/toErrorsMap";
@@ -31,10 +29,12 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
   if (error) {
     body = <Box>{error.message}</Box>;
   } else if (fetching) {
-    body = <Spinner size={"xl"} />;
-  } else if (!data?.post) {
-    body = <Box>貼文不存在···</Box>;
-  } else if (data.post) {
+    body = (
+      <Flex alignItems="center">
+        <Spinner size={"xl"} m="auto"/>
+      </Flex>
+    );
+  } else if (data?.post) {
     body = (
       <Formik
         initialValues={{ title: data.post.title, text: data.post.text }}
@@ -50,10 +50,10 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
             setEditing(false);
             return;
           }
-
           await updatePost({
             id: intId,
             input: {
+              images: data.post?.images as string,
               ...values,
             },
           });
@@ -63,33 +63,41 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
       >
         {({ isSubmitting, handleChange }) => (
           <Form>
-            <InputField label="標題" name="title" disabled={editing} />
+            <InputField label="" name="title" disabled={editing} />
             <Box mt={4}>
               <InputField
-                label="內容"
+                label=""
                 name="text"
+                minHeight="50vh"
                 textArea
                 disabled={editing}
               />
             </Box>
-            <Box mt={4}>
+            <Flex mt={4}>
               <Button
+                flex={1}
                 type="submit"
-                colorScheme="messenger"
+                bgColor="Highlight"
                 disabled={editing}
                 isLoading={isSubmitting}
                 onChange={handleChange}
               >
                 修改
               </Button>
-            </Box>
+            </Flex>
           </Form>
         )}
       </Formik>
     );
   }
 
-  return <Layout variant="small">{body}</Layout>;
+  return (
+    <Layout>
+      <Box bgColor="#f9f7f7" borderRadius="lg" p={4}>
+        {body}
+      </Box>
+    </Layout>
+  );
 };
 
 export default withUrqlClient(createUrqlClient)(EditPost);

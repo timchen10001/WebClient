@@ -1,0 +1,3 @@
+mutation ResponseToReceive($inviterId: Int!, $value: Int!) {
+  respondToReceive(inviterId: $inviterId, value: $value)
+}

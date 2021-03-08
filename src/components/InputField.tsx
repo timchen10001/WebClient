@@ -11,12 +11,14 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   name: string;
   textArea?: boolean;
+  minHeight?: string;
   clearValue?: boolean;
 };
 
 export const InputField: React.FC<InputFieldProps> = ({
   label,
   size: _,
+  minHeight = "",
   textArea = false,
   required = false,
   disabled = false,
@@ -39,6 +41,8 @@ export const InputField: React.FC<InputFieldProps> = ({
       <C
         {...field}
         {...props}
+        minHeight={minHeight}
+        _focus={{ borderColor: "lightgray", boxShadow: "sm"  }}
         value={clearValue ? "" : field.value}
         id={field.name}
       />

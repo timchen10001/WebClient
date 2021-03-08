@@ -1,0 +1,4 @@
+fragment FriendSnippet on Friend {
+    ID
+    name
+}

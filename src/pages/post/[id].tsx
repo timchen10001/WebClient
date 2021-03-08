@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { CustomAlertDialog } from "../../components/CustomAlertDialog";
 import { EditDeleteButtons } from "../../components/EditDeleteButtons";
-import { Layout } from "../../components/Layout";
+import { Layout } from "../../layouts/Layout";
 import { alertFields } from "../../constants";
 import { usePostQuery } from "../../generated/graphql";
 import { useGetPostIntId } from "../../hooks/useGetPostIntId";
@@ -42,7 +42,7 @@ const Post: React.FC<PostProps> = ({}) => {
 
   return (
     <Layout>
-      <Container>
+      <Container bgColor="#f9f7f7" borderRadius="lg" p={4} minHeight={"60vh"}>
         {!postQuery ? null : (
           <>
             <CustomAlertDialog
@@ -51,7 +51,7 @@ const Post: React.FC<PostProps> = ({}) => {
               hook={[isOpen, setIsOpen]}
             />
             <Heading mb={4}>{postQuery.title}</Heading>
-            <Box>{postQuery.text}</Box>
+            <Box>{postQuery.text}</Box>       
             <EditDeleteButtons
               id={postQuery.id}
               creatorId={postQuery.creator?.id}

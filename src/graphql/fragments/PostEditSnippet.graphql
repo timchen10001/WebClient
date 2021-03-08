@@ -1,5 +1,6 @@
 fragment PostEditSnippet on Post {
   title
   text
+  images
   textSnippet
 }

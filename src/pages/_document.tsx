@@ -6,7 +6,7 @@ export default class Document extends NextDocument {
     return (
       <Html>
         <Head />
-        <body>
+        <body style={{ backgroundColor: "#e5e6ea" }}>
           {/* Make Color mode to persists when you refresh the page. */}
           <ColorModeScript />
           <Main />
