@@ -1,9 +1,9 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, IconButton, Input } from "@chakra-ui/react";
+import { Box, Button, Flex, IconButton, Input, Select } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { InputField } from "../components/InputField";
 import { Layout } from "../layouts/Layout";
 import { useCreatePostMutation } from "../generated/graphql";
@@ -19,6 +19,7 @@ interface createPostProps {}
 const CreatePost: React.FC<createPostProps> = ({}) => {
   const router = useRouter();
   useIsAuth();
+  const [isPublic, setIsPublic] = useState(true);
   const [, createPost] = useCreatePostMutation();
 
   let imgFileList: any = [];
@@ -26,7 +27,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
     <Layout>
       <Box bgColor="#f9f7f7" borderRadius="lg" p={4}>
         <Formik
-          initialValues={{ postTitle: "", postText: "", interfaceFile: "" }}
+          initialValues={{ postTitle: "", postText: "" }}
           onSubmit={async (values, { setErrors }) => {
             const { postTitle: title, postText: text } = values;
 
@@ -53,7 +54,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
             imgFileList = null;
 
             const { error } = await createPost({
-              input: { title, text, images },
+              input: { title, text, images, isPublic },
             });
             if (error) {
               console.log(error);
@@ -74,7 +75,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
                   name="postText"
                   label=""
                   placeholder="請輸入Po文內容···"
-                  minHeight="50vh"
+                  minHeight="20vh"
                   textArea={true}
                 />
               </Box>
@@ -90,9 +91,10 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
                   }}
                 />
                 <IconButton
+                  pr={2}
                   id={"interfaceFile"}
                   flex={1}
-                  colorScheme="facebook"
+                  bgColor="#dae4ef"
                   aria-label="上傳相片"
                   _focus={{ border: "none" }}
                   icon={<AddIcon boxSize="4" />}
@@ -100,6 +102,23 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
                     document.getElementById("hiddenFile")?.click();
                   }}
                 />
+                <Select
+                  pl={2}
+                  maxW="50%"
+                  variant="filled"
+                  bgColor={"#dae4ef"}
+                  onChange={(e) => {
+                    if (e.target.value === "public") {
+                      setIsPublic(true);
+                    } else {
+                      setIsPublic(false);
+                    }
+                  }}
+                  _focus={{ border: "none" }}
+                >
+                  <option value={"public"}>公開</option>
+                  <option value={"private"}>私人</option>
+                </Select>
               </Flex>
               <Flex mt={4}>
                 <Button

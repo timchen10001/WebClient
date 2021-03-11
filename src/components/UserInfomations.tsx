@@ -44,7 +44,11 @@ export const UserInfomations: React.FC<UserInfomationsProps> = ({
             !creator.avator ? "https://placekitten.com/100/100" : creator.avator
           }
           onClick={() => {
-            if (me && !isSelf && !hasBeenFriend) {
+            if (!me) {
+              return;
+            }
+            
+            if (!isSelf && !hasBeenFriend) {
               onOpen();
             }
           }}
