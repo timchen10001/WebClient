@@ -53,6 +53,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
           await updatePost({
             id: intId,
             input: {
+              isPublic: data.post?.isPublic as boolean,
               images: data.post?.images as string,
               ...values,
             },

@@ -23,6 +23,7 @@ import { sleep } from "../utils/sleep";
 
 const Index = () => {
   const [variables, setVariables] = useState({
+    privateMode: false,
     limit: 10,
     cursor: null as null | string,
   });
@@ -117,6 +118,7 @@ const Index = () => {
               setMoreFetching(true);
               const newCursor = getNewCursor(posts);
               setVariables({
+                privateMode: variables.privateMode,
                 limit: variables.limit,
                 cursor: newCursor,
               });

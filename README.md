@@ -1,23 +1,35 @@
-# Example app with [chakra-ui](https://github.com/chakra-ui/chakra-ui)
+# [anotherbush.com](https://anotherbush.com/)
 
-This example features how to use [chakra-ui](https://github.com/chakra-ui/chakra-ui) as the component library within a Next.js app.
+### Client Side Server
 
-We are connecting the Next.js `_app.js` with `chakra-ui`'s Theme and ColorMode containers so the pages can have app-wide dark/light mode. We are also creating some components which shows the usage of `chakra-ui`'s style props.
+Project Skills
 
-## Deploy your own
+- React 
+- Nextjs
+- Chakra-ui
+- url (client exchange)
+- GraphQL API
+- Server-Side Rendering
+- Form Data PreValidating
+- RWD
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+![Image](https://media.giphy.com/media/p99Unv3ayooVkU0Fyg/giphy.gif)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-chakra-ui&project-name=with-chakra-ui&repository-name=with-chakra-ui)
+![Image](https://upload.cc/i1/2021/03/11/EYZn1U.png)
 
-## How to use
+# 功能介紹
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-npx create-next-app --example with-chakra-ui with-chakra-ui-app
-# or
-yarn create next-app --example with-chakra-ui with-chakra-ui-app
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+- 會員系統
+  - 註冊
+  - 登入
+  - 第三方驗證與系統的整合
+  - 重設密碼
+  
+- 社群功能
+  - 貼文
+  - 修改貼文
+  - 刪除貼文
+  - 上傳多張照片
+  - 照片預覽
+  - 新增好友
+  - 聊天系統 (開發中)
