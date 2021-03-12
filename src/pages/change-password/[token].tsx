@@ -80,28 +80,28 @@ const ChangePassword: NextPage<{ token: string }> = ({}) => {
                   required={true}
                 />
               </Box>
-                {tokenExpried ? (
-                  <Flex fontSize="14px" mt={2}>
-                    <Box color="red">憑證已過期</Box>
-                    <Box color="blue" ml="auto" textDecoration="underline">
-                      <NextLink href="/forgetPassword">
-                        <Link>重新取得密碼重置憑證</Link>
-                      </NextLink>
-                    </Box>
-                  </Flex>
-                ) : (
-                  <Flex mt={4}>
+              {tokenExpried ? (
+                <Flex fontSize="14px" mt={2}>
+                  <Box color="red">憑證已過期</Box>
+                  <Box color="blue" ml="auto" textDecoration="underline">
+                    <NextLink href="/forgetPassword">
+                      <Link>重新取得密碼重置憑證</Link>
+                    </NextLink>
+                  </Box>
+                </Flex>
+              ) : (
+                <Flex mt={4}>
                   <Button
-                  flex={1}
+                    flex={1}
                     type="submit"
                     onChange={handleChange}
                     isLoading={isSubmitting}
-                    colorScheme="messenger"
+                    bgColor="#9EC9F7"
                   >
                     提交
                   </Button>
-              </Flex>
-                )}
+                </Flex>
+              )}
             </Form>
           )}
         </Formik>

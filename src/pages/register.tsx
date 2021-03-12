@@ -108,7 +108,7 @@ const Register: React.FC<registerProps> = ({}) => {
               <Flex mt={6}>
                 <Button
                   flex={1}
-                  bgColor="Highlight"
+                  bgColor="#9EC9F7"
                   isLoading={isSubmitting}
                   onChange={handleChange}
                   type="submit"

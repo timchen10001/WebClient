@@ -67,7 +67,7 @@ const ForgetPassword: React.FC<forgetPasswordProps> = ({}) => {
                     type="submit"
                     isLoading={isSubmitting}
                     onChange={handleChange}
-                    bgColor="Highlight"
+                    bgColor="#9EC9F7"
                   >
                     提交
                   </Button>

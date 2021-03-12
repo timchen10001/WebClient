@@ -67,7 +67,7 @@ const Login: React.FC<loginProps> = ({}) => {
                   flex={1}
                   isLoading={isSubmitting}
                   onChange={handleChange}
-                  bgColor="Highlight"
+                  bgColor="#9EC9F7"
                   type="submit"
                 >
                   送出

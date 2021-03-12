@@ -1,13 +1,13 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, IconButton, Input, Select } from "@chakra-ui/react";
+import { Box, Button, Flex, IconButton, Input } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 import { InputField } from "../components/InputField";
-import { Layout } from "../layouts/Layout";
 import { useCreatePostMutation } from "../generated/graphql";
 import { useIsAuth } from "../hooks/useIsAuth";
+import { Layout } from "../layouts/Layout";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { getFormDataFromFileList } from "../utils/getFormDataFromFileList";
 import { postInputExamination } from "../utils/postInputExamination";
@@ -19,7 +19,6 @@ interface createPostProps {}
 const CreatePost: React.FC<createPostProps> = ({}) => {
   const router = useRouter();
   useIsAuth();
-  const [isPublic, setIsPublic] = useState(true);
   const [, createPost] = useCreatePostMutation();
 
   let imgFileList: any = [];
@@ -54,7 +53,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
             imgFileList = null;
 
             const { error } = await createPost({
-              input: { title, text, images, isPublic },
+              input: { title, text, images },
             });
             if (error) {
               console.log(error);
@@ -75,7 +74,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
                   name="postText"
                   label=""
                   placeholder="請輸入Po文內容···"
-                  minHeight="20vh"
+                  minHeight="50vh"
                   textArea={true}
                 />
               </Box>
@@ -102,7 +101,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
                     document.getElementById("hiddenFile")?.click();
                   }}
                 />
-                <Select
+                {/* <Select
                   pl={2}
                   maxW="50%"
                   variant="filled"
@@ -116,15 +115,15 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
                   }}
                   _focus={{ border: "none" }}
                 >
-                  <option value={"public"}>公開</option>
-                  <option value={"private"}>私人</option>
-                </Select>
+                  <option value="public">公開</option>
+                  <option value="private">私人</option>
+                </Select> */}
               </Flex>
               <Flex mt={4}>
                 <Button
                   flex={1}
                   type="submit"
-                  bgColor="Highlight"
+                  bgColor="#9EC9F7"
                   isLoading={isSubmitting}
                   onChange={handleChange}
                 >

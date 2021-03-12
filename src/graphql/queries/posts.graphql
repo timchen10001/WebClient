@@ -1,5 +1,5 @@
-query Posts($privateMode: Boolean!, $limit: Int!, $cursor: String) {
-  posts(privateMode: $privateMode, limit: $limit, cursor: $cursor) {
+query Posts($limit: Int!, $cursor: String) {
+  posts(limit: $limit, cursor: $cursor) {
     hasMore
     posts {
       ...PostSnippet

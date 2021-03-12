@@ -18,7 +18,6 @@ export type Query = {
   __typename?: 'Query';
   receives?: Maybe<Array<Friend>>;
   post?: Maybe<Post>;
-  privatePost: PaginatedPosts;
   posts: PaginatedPosts;
   me?: Maybe<User>;
 };
@@ -32,7 +31,6 @@ export type QueryPostArgs = {
 export type QueryPostsArgs = {
   cursor?: Maybe<Scalars['String']>;
   limit: Scalars['Int'];
-  privateMode: Scalars['Boolean'];
 };
 
 export type Friend = {
@@ -49,7 +47,6 @@ export type Post = {
   points: Scalars['Float'];
   voteStatus?: Maybe<Scalars['Int']>;
   images: Scalars['String'];
-  isPublic: Scalars['Boolean'];
   creatorId: Scalars['Float'];
   creator: User;
   createdAt: Scalars['String'];
@@ -166,7 +163,6 @@ export type InputPost = {
   title: Scalars['String'];
   text: Scalars['String'];
   images: Scalars['String'];
-  isPublic: Scalars['Boolean'];
 };
 
 export type UserResponse = {
@@ -193,7 +189,7 @@ export type PostEditSnippetFragment = (
 
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'voteStatus' | 'images' | 'isPublic' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
+  & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'voteStatus' | 'images' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
   & { creator: (
     { __typename?: 'User' }
     & RegularCreatorFragment
@@ -398,7 +394,6 @@ export type PostQuery = (
 );
 
 export type PostsQueryVariables = Exact<{
-  privateMode: Scalars['Boolean'];
   limit: Scalars['Int'];
   cursor?: Maybe<Scalars['String']>;
 }>;
@@ -457,7 +452,6 @@ export const PostSnippetFragmentDoc = gql`
   points
   voteStatus
   images
-  isPublic
   creatorId
   creator {
     ...RegularCreator
@@ -643,8 +637,8 @@ export function usePostQuery(options: Omit<Urql.UseQueryArgs<PostQueryVariables>
   return Urql.useQuery<PostQuery>({ query: PostDocument, ...options });
 };
 export const PostsDocument = gql`
-    query Posts($privateMode: Boolean!, $limit: Int!, $cursor: String) {
-  posts(privateMode: $privateMode, limit: $limit, cursor: $cursor) {
+    query Posts($limit: Int!, $cursor: String) {
+  posts(limit: $limit, cursor: $cursor) {
     hasMore
     posts {
       ...PostSnippet

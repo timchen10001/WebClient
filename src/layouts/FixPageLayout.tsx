@@ -15,7 +15,7 @@ export const FixPageLayout: React.FC<FixPageLayoutProps> = ({ children }) => {
         zIndex={1}
         boxShadow="md"
         position={"sticky"}
-        bgColor="Highlight"
+        bgColor="#9EC9F7"
         borderBottomRadius="lg"
       >
         <Flex flex={1} m="auto" maxWidth={800}>
