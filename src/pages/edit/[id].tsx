@@ -4,9 +4,9 @@ import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
-import { Layout } from "../../layouts/Layout";
 import { usePostQuery, useUpdatePostMutation } from "../../generated/graphql";
 import { useGetPostIntId } from "../../hooks/useGetPostIntId";
+import { Layout } from "../../layouts/Layout";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { postInputExamination } from "../../utils/postInputExamination";
 import { toErrorsMap } from "../../utils/toErrorsMap";
@@ -31,7 +31,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
   } else if (fetching) {
     body = (
       <Flex alignItems="center">
-        <Spinner size={"xl"} m="auto"/>
+        <Spinner size={"xl"} m="auto" />
       </Flex>
     );
   } else if (data?.post) {
@@ -53,7 +53,6 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
           await updatePost({
             id: intId,
             input: {
-              isPublic: data.post?.isPublic as boolean,
               images: data.post?.images as string,
               ...values,
             },

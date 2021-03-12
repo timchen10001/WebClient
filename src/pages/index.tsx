@@ -1,12 +1,8 @@
-import { Box, Button, Flex, Spinner, Stack } from "@chakra-ui/react";
+import { Button, Flex, Spinner, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
 import { CustomAlertDialog } from "../components/CustomAlertDialog";
-import { CustomMenuListButton } from "../components/CustomMenuListButton";
-import { PaginatedImage } from "../components/PaginatedImage";
-import { PostSnippetSection } from "../components/PostSnippetSection";
-import { UpdootSection } from "../components/UpdootSection";
-import { UserInfomations } from "../components/UserInfomations";
+import { RegularPost } from "../components/RegularPost";
 import { alertFields } from "../constants";
 import {
   PaginatedPosts,
@@ -65,43 +61,14 @@ const Index = () => {
         <Stack spacing={4}>
           {posts?.map((p, idx) =>
             !p ? null : (
-              <Flex
-                position="relative"
-                key={`post-${idx}`}
-                direction="column"
-                alignItems="center"
-                py={device === "mobile" ? 5 : 6}
-                px={device === "mobile" ? 0 : 6}
-                shadow="md"
-                borderWidth="1px"
-                bgColor="#f9f7f7"
-                borderRadius="lg"
-              >
-                <Flex
-                  w="100%"
-                  mr="auto"
-                  alignItems="center"
-                  px={2}
-                  justifyContent="space-between"
-                >
-                  <UserInfomations creator={p.creator} me={meQuery?.me} />
-                  <CustomMenuListButton
-                    id={p.id}
-                    creatorId={p.creator?.id}
-                    onClick={() => {
-                      setSelectPost(p);
-                      setIsOpen(true);
-                    }}
-                  />
-                </Flex>
-                <Flex key={p.id} minW="100%" mt={4} px={3}>
-                  <UpdootSection post={p} />
-                  <Box ml={3}>
-                    <PostSnippetSection post={p} />
-                  </Box>
-                </Flex>
-                {!p.images ? null : <PaginatedImage images={p.images} />}
-              </Flex>
+              <RegularPost
+                index={idx}
+                post={p}
+                device={device}
+                me={meQuery?.me}
+                setSelectPost={setSelectPost}
+                setIsOpen={setIsOpen}
+              />
             )
           )}
         </Stack>
