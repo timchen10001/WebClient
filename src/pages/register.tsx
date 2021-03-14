@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
-import { FixPageLayout } from "../layouts/FixPageLayout";
+import { FixPageLayout } from "../components/layouts/FixPageLayout";
 import { InputField } from "../components/InputField";
 import {
   useRegisterMutation,
@@ -11,7 +11,7 @@ import {
 } from "../generated/graphql";
 import { useIsLogin } from "../hooks/useIsLogin";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { passwordExamination } from "../utils/passwordExamination";
+import { passwordExamination } from "../utils/validators";
 import { toErrorsMap } from "../utils/toErrorsMap";
 
 interface registerProps {}
@@ -52,7 +52,6 @@ const Register: React.FC<registerProps> = ({}) => {
             } as UsernameEmailPassword;
 
             const response = await register({ input });
-            // console.log(response);
 
             if (!response.data?.register) {
               console.log("hi");

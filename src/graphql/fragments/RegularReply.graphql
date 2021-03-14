@@ -1,0 +1,8 @@
+fragment RegularReply on Reply {
+  content
+  createdAt
+  updatedAt
+  replier {
+    ...RegularUser
+  }
+}

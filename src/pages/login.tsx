@@ -1,13 +1,16 @@
-import { Box, Button, Flex, Heading, Image, Link } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { FixPageLayout } from "../layouts/FixPageLayout";
+import { FacebookOAuthIcon } from "../components/icons/FacebookOAuthIcon";
+import { GoogleOAuthIcon } from "../components/icons/GoogleOAuthIcon";
+import { TwitterOAuthIcon } from "../components/icons/TwitterOAuthIcon";
 import { InputField } from "../components/InputField";
 import { useLoginMutation } from "../generated/graphql";
 import { useIsLogin } from "../hooks/useIsLogin";
+import { FixPageLayout } from "../components/layouts/FixPageLayout";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { toErrorsMap } from "../utils/toErrorsMap";
 
@@ -80,60 +83,9 @@ const Login: React.FC<loginProps> = ({}) => {
                 justifyContent="space-around"
                 mx="auto"
               >
-                <NextLink href={`${process.env.NEXT_PUBLIC_OAUTH_URL}/google`}>
-                  <Button
-                    variant="unstyled"
-                    maxWidth="fit-content"
-                    flex={1}
-                    _focus={{ border: "none" }}
-                  >
-                    <Image
-                      boxSize="9"
-                      alt="Google 登入"
-                      title="使用 Google 登入 anotherbush.com"
-                      src={
-                        "https://res.cloudinary.com/dunc6xvuh/image/upload/v1614944830/material/google-symbol_acleoo.png"
-                      }
-                    />
-                  </Button>
-                </NextLink>
-
-                <NextLink
-                  href={`${process.env.NEXT_PUBLIC_OAUTH_URL}/facebook`}
-                >
-                  <Button
-                    variant="unstyled"
-                    flex={1}
-                    maxWidth="fit-content"
-                    _focus={{ border: "none" }}
-                  >
-                    <Image
-                      boxSize="9"
-                      alt="Facebook 登入"
-                      title="使用 Facebook 登入 anotherbush.com"
-                      src={
-                        "https://res.cloudinary.com/dunc6xvuh/image/upload/v1614946075/material/facebook_1_j2etka.png"
-                      }
-                    />
-                  </Button>
-                </NextLink>
-                <NextLink href={`${process.env.NEXT_PUBLIC_OAUTH_URL}/twitter`}>
-                  <Button
-                    variant="unstyled"
-                    flex={1}
-                    maxWidth="fit-content"
-                    _focus={{ border: "none" }}
-                  >
-                    <Image
-                      boxSize="9"
-                      alt="Twitter 登入"
-                      title="使用 Twitter 登入 anotherbush.com"
-                      src={
-                        "https://res.cloudinary.com/dunc6xvuh/image/upload/v1614946082/material/twitter_jrdxsw.png"
-                      }
-                    />
-                  </Button>
-                </NextLink>
+                <GoogleOAuthIcon />
+                <FacebookOAuthIcon />
+                <TwitterOAuthIcon />
               </Flex>
               <Flex mt={4} mb={-4}>
                 <NextLink href="/forgetPassword">

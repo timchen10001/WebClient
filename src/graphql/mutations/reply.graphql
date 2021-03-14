@@ -1,0 +1,10 @@
+mutation Reply($replyInput: PostReplyInput!) {
+  reply(replyInput: $replyInput) {
+    errors {
+      ...RegularError
+    }
+    reply {
+      ...RegularReply
+    }
+  }
+}

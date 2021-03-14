@@ -5,9 +5,15 @@ fragment PostSnippet on Post {
   points
   voteStatus
   images
+  privateMode
   creatorId
-  creator { ...RegularCreator }
+  creator {
+    ...RegularCreator
+  }
+  replies {
+    ...RegularReply
+  }
+  textSnippet
   createdAt
   updatedAt
-  textSnippet
 }

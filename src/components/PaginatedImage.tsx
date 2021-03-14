@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Flex, Image } from "@chakra-ui/react";
+import { Box, Flex, Img } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useRWD from "../hooks/useRWD";
 
@@ -46,7 +46,7 @@ export const PaginatedImage: React.FC<PaginatedImageProps> = ({ images }) => {
         </Box>
       )}
       {imagesUrls.map((src, index) => (
-        <Image
+        <Img
           borderRadius="md"
           maxHeight={device === "PC" ? "480px" : "420px"}
           key={`image-${index}`}
