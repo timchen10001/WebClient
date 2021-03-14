@@ -1,8 +1,8 @@
 import { Box, Flex, Heading, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
-import { Footer } from "../components/Footer";
-import { Wrapper } from "../components/Wrapper";
+import { Footer } from "../Footer";
+import { Wrapper } from "../Wrapper";
 
 interface FixPageLayoutProps {}
 

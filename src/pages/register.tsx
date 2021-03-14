@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
-import { FixPageLayout } from "../layouts/FixPageLayout";
+import { FixPageLayout } from "../components/layouts/FixPageLayout";
 import { InputField } from "../components/InputField";
 import {
   useRegisterMutation,

@@ -1,7 +1,8 @@
-import { Box, Button, Flex, Spinner, Stack } from "@chakra-ui/react";
+import { Button, Flex, Spinner, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
 import { CustomAlertDialog } from "../components/CustomAlertDialog";
+import { Layout } from "../components/layouts/Layout";
 import { RegularPost } from "../components/RegularPost";
 import { alertFields } from "../constants";
 import {
@@ -10,12 +11,11 @@ import {
   useMeQuery,
   usePostsQuery,
 } from "../generated/graphql";
+import { useInfiniteScrolling } from "../hooks/useInfiniteScrolling";
 import useRWD from "../hooks/useRWD";
-import { Layout } from "../layouts/Layout";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { getNewCursor } from "../utils/getNewCursor";
 import { isServer } from "../utils/isServer";
-import { sleep } from "../utils/sleep";
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -36,7 +36,6 @@ const Index = () => {
   const [{ data: meQuery }] = useMeQuery({ pause });
   const device = useRWD();
   const [isOpen, setIsOpen] = useState(false);
-  const [moreFetching, setMoreFetching] = useState(false);
 
   if (error) {
     return <div>{error}</div>;
@@ -45,6 +44,17 @@ const Index = () => {
   const postsQuery = data?.posts as PaginatedPosts;
   const hasMore = postsQuery?.hasMore;
   const posts = postsQuery?.posts;
+  const { moreFetching } = useInfiniteScrolling({
+    hasMore,
+    changeCursor: () => {
+      const newCursor = getNewCursor(posts);
+      setVariables({
+        privateMode: false,
+        limit: variables.limit,
+        cursor: newCursor,
+      });
+    },
+  });
 
   return (
     <Layout>
@@ -80,19 +90,9 @@ const Index = () => {
             m="auto"
             my="5"
             size="sm"
+            id="fetchMore-button"
             style={{ backgroundColor: "#dadcea" }}
             isLoading={moreFetching}
-            onClick={async () => {
-              setMoreFetching(true);
-              const newCursor = getNewCursor(posts);
-              setVariables({
-                privateMode: variables.privateMode,
-                limit: variables.limit,
-                cursor: newCursor,
-              });
-              await sleep(2000);
-              setMoreFetching(false);
-            }}
           >
             更多
           </Button>

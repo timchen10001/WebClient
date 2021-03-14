@@ -3,24 +3,28 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { PostSnippetFragment } from "../../generated/graphql";
-import useRWD, { RWDVariant } from "../../hooks/useRWD";
+import { RWDVariant } from "../../hooks/useRWD";
 interface PostSnippetSectionProps {
   post: PostSnippetFragment;
   device: RWDVariant;
 }
 
 export const PostSnippetSection: React.FC<PostSnippetSectionProps> = ({
-  // device,
+  device,
   post,
 }) => {
   const router = useRouter();
   const { id, title, text, createdAt, textSnippet } = post;
   const currentDate = new Date(parseInt(createdAt));
-  const device = useRWD();
+  const isMobile = device === "mobile";
   const isInPostPage = router.pathname.includes("post");
-  const sliceTextSnippet = textSnippet.slice(0, (device === "mobile" ? 38 : 68));
-  const textSnippetFontSize = device === "mobile" ? "1rem" : "1.3rem";
-  const titleComponent = <Heading fontSize="1.35rem">{title}</Heading>;
+  const sliceTextSnippet = textSnippet.slice(0, isMobile ? 38 : 68);
+  const textSnippetFontSize = device === "mobile" ? "1rem" : "1.15rem";
+  const titleComponent = (
+    <Heading fontSize="1.3rem" mt={isMobile ? 2 : 1}>
+      {title}
+    </Heading>
+  );
 
   return (
     <Box flex={1} width="100%">

@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Img, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Img, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Post } from "../../generated/graphql";
 import { RWDVariant } from "../../hooks/useRWD";
@@ -9,10 +9,14 @@ interface ReplySectionProps {
   post: Post;
 }
 
-export const ReplySection: React.FC<ReplySectionProps> = ({ device, index, post }) => {
+export const ReplySection: React.FC<ReplySectionProps> = ({
+  device,
+  index,
+  post,
+}) => {
   const [repliesToShow, setRepliesToShow] = useState(2);
   const repliesSize = post.replies.length;
-  const repliesMoreThanToShow = repliesSize > repliesToShow;
+  const repliesMoreThanToShow = repliesSize - 1 > repliesToShow;
   const lastReplyIndex = repliesMoreThanToShow
     ? repliesSize - 1
     : repliesToShow;
@@ -30,7 +34,7 @@ export const ReplySection: React.FC<ReplySectionProps> = ({ device, index, post 
             setRepliesToShow(repliesToShow + 5);
           }}
         >
-          還有 {repliesSize - repliesToShow} 則留言 ....
+          還有 {repliesSize - repliesToShow - 1} 則留言 ....
         </Button>
       )}
       {replies.map((reply, idx) => (
@@ -45,15 +49,27 @@ export const ReplySection: React.FC<ReplySectionProps> = ({ device, index, post 
           />
           &nbsp;
           <Box bgColor="#EFF2F5" px={5} py={2} borderRadius="2xl" maxW="93%">
-            <span style={{ fontSize: "1.1rem", fontWeight: 800 }}>
+            <Text
+              as="span"
+              fontSize={device === "mobile" ? "1rem" : "1.2rem"}
+              fontWeight="800"
+            >
               {reply.replier.username}
-            </span>
+            </Text>
             &nbsp; &nbsp;
-            <span style={{ fontSize: "1.1rem" }}>{reply.content}</span>
+            <Text
+              as="span"
+              fontSize={device === "mobile" ? "0.9rem" : "1.1rem"}
+            >
+              {reply.content}
+            </Text>
             <br />
-            <span style={{ fontSize: "0.6rem" }}>
+            <Text
+              as="span"
+              fontSize={device === "mobile" ? "0.5rem" : "0.6rem"}
+            >
               {new Date(parseInt(reply.createdAt)).toLocaleString()}
-            </span>
+            </Text>
           </Box>
         </Flex>
       ))}

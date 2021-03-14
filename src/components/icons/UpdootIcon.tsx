@@ -1,7 +1,7 @@
 import { Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { Maybe } from "../../generated/graphql";
-import useRWD, { RWDVariant } from "../../hooks/useRWD";
+import { RWDVariant } from "../../hooks/useRWD";
 
 interface UpdootIconProps {
   device: RWDVariant;

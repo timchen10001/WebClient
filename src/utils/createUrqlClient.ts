@@ -109,7 +109,6 @@ export const createUrqlClient = (
         resolvers: {
           Query: {
             posts: cursorPagination(),
-            // receives: invitationReceives(),
           },
         },
         updates: {

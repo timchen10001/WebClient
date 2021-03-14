@@ -1,6 +1,6 @@
 import { Button, Flex, Img, Stack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import { Post, User, useReplyMutation } from "../generated/graphql";
 import { RWDVariant } from "../hooks/useRWD";
 import { toErrorsMap } from "../utils/toErrorsMap";
@@ -29,7 +29,6 @@ export const RegularPost: React.FC<RegularPostProps> = ({
   setSelectPost,
   setIsOpen,
 }) => {
-  const [clearInputField, setClearInputField] = useState(false);
   const [, reply] = useReplyMutation();
 
   const isMobile = device === "mobile";
@@ -43,7 +42,9 @@ export const RegularPost: React.FC<RegularPostProps> = ({
         const response = await reply({
           replyInput: { content: values.content, postId: post.id },
         });
+        console.log(response);
         if (response.data?.reply.errors) {
+          console.log(response.data?.reply.errors);
           setErrors(toErrorsMap(response.data.reply.errors));
         } else if (response.data?.reply.reply) {
           document.getElementById(`clear-reply-${index}-input-value`)?.click();
@@ -95,7 +96,7 @@ export const RegularPost: React.FC<RegularPostProps> = ({
             <UpdootSection device={device} post={post} />
           </Flex>
           <Stack mt={isMobile ? 1 : 2} w="95%">
-            <ReplySection index={index} post={post} />
+            <ReplySection device={device} index={index} post={post} />
 
             {!me ? null : (
               <Form
@@ -112,6 +113,7 @@ export const RegularPost: React.FC<RegularPostProps> = ({
                 />
                 &nbsp; &nbsp;
                 <InputField
+                  id="content"
                   name="content"
                   placeholder="留言......"
                   style={{

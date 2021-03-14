@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
-import { Footer } from "../components/Footer";
-import { NavBar } from "../components/NavBar";
-import { Wrapper } from "../components/Wrapper";
-import useRWD from "../hooks/useRWD";
+import { Footer } from "../Footer";
+import { NavBar } from "../NavBar";
+import { Wrapper } from "../Wrapper";
+import useRWD from "../../hooks/useRWD";
 
 interface LayoutProps {}
 

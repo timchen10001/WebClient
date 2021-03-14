@@ -7,7 +7,7 @@ import React from "react";
 import { InputField } from "../components/InputField";
 import { useCreatePostMutation } from "../generated/graphql";
 import { useIsAuth } from "../hooks/useIsAuth";
-import { Layout } from "../layouts/Layout";
+import { Layout } from "../components/layouts/Layout";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { getFormDataFromFileList } from "../utils/getFormDataFromFileList";
 import { toErrorsMap } from "../utils/toErrorsMap";

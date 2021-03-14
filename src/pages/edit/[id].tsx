@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
 import { usePostQuery, useUpdatePostMutation } from "../../generated/graphql";
 import { useGetPostIntId } from "../../hooks/useGetPostIntId";
-import { Layout } from "../../layouts/Layout";
+import { Layout } from "../../components/layouts/Layout";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { toErrorsMap } from "../../utils/toErrorsMap";
 import { postInputExamination } from "../../utils/validators";

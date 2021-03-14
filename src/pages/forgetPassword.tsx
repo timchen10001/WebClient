@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import React, { useState } from "react";
-import { FixPageLayout } from "../layouts/FixPageLayout";
+import { FixPageLayout } from "../components/layouts/FixPageLayout";
 import { InputField } from "../components/InputField";
 import { useForgetPasswordMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";

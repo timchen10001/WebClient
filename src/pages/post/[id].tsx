@@ -6,7 +6,7 @@ import { RegularPost } from "../../components/RegularPost";
 import { useMeQuery, usePostQuery } from "../../generated/graphql";
 import { useGetPostIntId } from "../../hooks/useGetPostIntId";
 import useRWD from "../../hooks/useRWD";
-import { Layout } from "../../layouts/Layout";
+import { Layout } from "../../components/layouts/Layout";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { isServer } from "../../utils/isServer";
 
@@ -34,22 +34,18 @@ const Post: React.FC<PostProps> = ({}) => {
     router.back();
   }
 
-  return (
+  return !fetching && postQuery ? (
     <Layout>
-      {postQuery ? (
-        <RegularPost
-          device={device}
-          post={postQuery as any}
-          me={meQuery?.me}
-          index={postQuery.id}
-          setIsOpen={() => {}}
-          setSelectPost={() => {}}
-        />
-      ) : (
-        <Box>貼文不存在或已遭刪除</Box>
-      )}
+      <RegularPost
+        device={device}
+        post={postQuery as any}
+        me={meQuery?.me}
+        index={postQuery.id}
+        setIsOpen={() => {}}
+        setSelectPost={() => {}}
+      />
     </Layout>
-  );
+  ) : null;
 };
 
 export default withUrqlClient(createUrqlClient, { ssr: true })(Post);

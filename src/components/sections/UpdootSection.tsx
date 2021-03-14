@@ -35,6 +35,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({
     >
       <IconButton
         width="33%"
+        bgColor="none"
         cursor={device === "PC" ? "pointer" : "none"}
         aria-label="updoot post"
         _focus={{ border: "none" }}
@@ -49,6 +50,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({
       />
       <IconButton
         width="33%"
+        bgColor="none"
         color={downdootFontBgc}
         aria-label="downdoot post"
         _focus={{ border: "none" }}
@@ -63,6 +65,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({
       />
       <IconButton
         width="33%"
+        bgColor="none"
         aria-label="points"
         cursor="text"
         _focus={{ border: "none" }}
