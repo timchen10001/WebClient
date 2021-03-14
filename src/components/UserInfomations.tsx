@@ -2,7 +2,7 @@ import {
   Button,
   Flex,
   Heading,
-  Image,
+  Img,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -34,12 +34,13 @@ export const UserInfomations: React.FC<UserInfomationsProps> = ({
   return (
     <>
       <Flex alignItems="center">
-        <Image
+        <Img
           mr="12px"
           boxSize="2.3rem"
           borderRadius="full"
           cursor="pointer"
           alt={`${creator.id}`}
+          userSelect="none"
           src={
             !creator.avator ? "https://placekitten.com/100/100" : creator.avator
           }
@@ -47,13 +48,12 @@ export const UserInfomations: React.FC<UserInfomationsProps> = ({
             if (!me) {
               return;
             }
-            
             if (!isSelf && !hasBeenFriend) {
               onOpen();
             }
           }}
         />
-        <Heading fontSize="1.0rem">{creator.username}</Heading>
+        <Heading fontSize="1.3rem">{creator.username}</Heading>
       </Flex>
       {isSelf || hasBeenFriend ? null : (
         <Modal isOpen={isOpen} onClose={onClose}>

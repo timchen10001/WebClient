@@ -1,5 +1,37 @@
 import { FieldError } from "../generated/graphql";
-import strip from "../utils/strip";
+import strip from "./strip";
+
+export function emailExamination(
+  email: string,
+  field: string
+): FieldError[] | undefined {
+  if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+    return [
+      {
+        field,
+        message: "電子信箱格式錯誤",
+      },
+    ];
+  }
+  return;
+}
+
+export function passwordExamination(
+  password: string,
+  checkPassword: string,
+  field: string
+): FieldError[] | undefined {
+  if (password !== checkPassword) {
+    return [
+      {
+        field,
+        message: "與使用者密碼不符",
+      },
+    ];
+  }
+
+  return;
+}
 
 interface postInputField {
   title: string;

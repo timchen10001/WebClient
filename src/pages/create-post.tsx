@@ -10,9 +10,9 @@ import { useIsAuth } from "../hooks/useIsAuth";
 import { Layout } from "../layouts/Layout";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { getFormDataFromFileList } from "../utils/getFormDataFromFileList";
-import { postInputExamination } from "../utils/postInputExamination";
 import { toErrorsMap } from "../utils/toErrorsMap";
 import { uploadImage } from "../utils/uploadImage";
+import { postInputExamination } from "../utils/validators";
 
 interface createPostProps {}
 
@@ -67,6 +67,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
               <InputField
                 label=""
                 name="postTitle"
+                maxLength={20}
                 placeholder="請輸入標題···"
               />
               <Box mt={-3}>

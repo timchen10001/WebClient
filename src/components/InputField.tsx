@@ -8,7 +8,7 @@ import { useField } from "formik";
 import React, { InputHTMLAttributes } from "react";
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
-  label: string;
+  label?: string;
   name: string;
   textArea?: boolean;
   minHeight?: string;
@@ -37,14 +37,14 @@ export const InputField: React.FC<InputFieldProps> = ({
       isRequired={required}
       isDisabled={disabled}
     >
-      <FormLabel htmlFor={field.name}>{label}</FormLabel>
+      {label ? <FormLabel htmlFor={field.name}>{label}</FormLabel> : null}
       <C
         {...field}
         {...props}
         minHeight={minHeight}
         _focus={{ borderColor: "lightgray", boxShadow: "sm"  }}
         value={clearValue ? "" : field.value}
-        id={field.name}
+        // id={field.name}
       />
       {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>

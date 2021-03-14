@@ -16,10 +16,10 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  receives?: Maybe<Array<Friend>>;
   post?: Maybe<Post>;
   posts: PaginatedPosts;
   me?: Maybe<User>;
+  receives?: Maybe<Array<Friend>>;
 };
 
 
@@ -33,12 +33,6 @@ export type QueryPostsArgs = {
   limit: Scalars['Int'];
 };
 
-export type Friend = {
-  __typename?: 'Friend';
-  ID: Scalars['Float'];
-  name: Scalars['String'];
-};
-
 export type Post = {
   __typename?: 'Post';
   id: Scalars['Float'];
@@ -47,11 +41,13 @@ export type Post = {
   points: Scalars['Float'];
   voteStatus?: Maybe<Scalars['Int']>;
   images: Scalars['String'];
+  privateMode: Scalars['Int'];
   creatorId: Scalars['Float'];
   creator: User;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   textSnippet: Scalars['String'];
+  replies: Array<Reply>;
 };
 
 export type User = {
@@ -63,6 +59,20 @@ export type User = {
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   friends: Array<Friend>;
+};
+
+export type Friend = {
+  __typename?: 'Friend';
+  ID: Scalars['Float'];
+  name: Scalars['String'];
+};
+
+export type Reply = {
+  __typename?: 'Reply';
+  replier: User;
+  content: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
 };
 
 export type PaginatedPosts = {
@@ -80,6 +90,7 @@ export type Mutation = {
   updatePost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
   vote: Scalars['Boolean'];
+  reply: ReplyResponse;
   changePassword: UserResponse;
   forgetPassword: Scalars['Boolean'];
   register: UserResponse;
@@ -126,6 +137,11 @@ export type MutationVoteArgs = {
 };
 
 
+export type MutationReplyArgs = {
+  replyInput: PostReplyInput;
+};
+
+
 export type MutationChangePasswordArgs = {
   newPassword: Scalars['String'];
   token: Scalars['String'];
@@ -165,6 +181,17 @@ export type InputPost = {
   images: Scalars['String'];
 };
 
+export type ReplyResponse = {
+  __typename?: 'ReplyResponse';
+  reply?: Maybe<Reply>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
+export type PostReplyInput = {
+  postId: Scalars['Int'];
+  content: Scalars['String'];
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -189,11 +216,14 @@ export type PostEditSnippetFragment = (
 
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'voteStatus' | 'images' | 'creatorId' | 'createdAt' | 'updatedAt' | 'textSnippet'>
+  & Pick<Post, 'id' | 'title' | 'text' | 'points' | 'voteStatus' | 'images' | 'privateMode' | 'creatorId' | 'textSnippet' | 'createdAt' | 'updatedAt'>
   & { creator: (
     { __typename?: 'User' }
     & RegularCreatorFragment
-  ) }
+  ), replies: Array<(
+    { __typename?: 'Reply' }
+    & RegularReplyFragment
+  )> }
 );
 
 export type RegularCreatorFragment = (
@@ -204,6 +234,15 @@ export type RegularCreatorFragment = (
 export type RegularErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
+);
+
+export type RegularReplyFragment = (
+  { __typename?: 'Reply' }
+  & Pick<Reply, 'content' | 'createdAt' | 'updatedAt'>
+  & { replier: (
+    { __typename?: 'User' }
+    & RegularUserFragment
+  ) }
 );
 
 export type RegularUserFragment = (
@@ -332,6 +371,25 @@ export type RegisterMutation = (
   ) }
 );
 
+export type ReplyMutationVariables = Exact<{
+  replyInput: PostReplyInput;
+}>;
+
+
+export type ReplyMutation = (
+  { __typename?: 'Mutation' }
+  & { reply: (
+    { __typename?: 'ReplyResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & RegularErrorFragment
+    )>>, reply?: Maybe<(
+      { __typename?: 'Reply' }
+      & RegularReplyFragment
+    )> }
+  ) }
+);
+
 export type ResponseToReceiveMutationVariables = Exact<{
   inviterId: Scalars['Int'];
   value: Scalars['Int'];
@@ -444,29 +502,6 @@ export const RegularCreatorFragmentDoc = gql`
   email
 }
     `;
-export const PostSnippetFragmentDoc = gql`
-    fragment PostSnippet on Post {
-  id
-  title
-  text
-  points
-  voteStatus
-  images
-  creatorId
-  creator {
-    ...RegularCreator
-  }
-  createdAt
-  updatedAt
-  textSnippet
-}
-    ${RegularCreatorFragmentDoc}`;
-export const RegularErrorFragmentDoc = gql`
-    fragment RegularError on FieldError {
-  field
-  message
-}
-    `;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
@@ -479,6 +514,44 @@ export const RegularUserFragmentDoc = gql`
   }
   createdAt
   updatedAt
+}
+    `;
+export const RegularReplyFragmentDoc = gql`
+    fragment RegularReply on Reply {
+  content
+  createdAt
+  updatedAt
+  replier {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+export const PostSnippetFragmentDoc = gql`
+    fragment PostSnippet on Post {
+  id
+  title
+  text
+  points
+  voteStatus
+  images
+  privateMode
+  creatorId
+  creator {
+    ...RegularCreator
+  }
+  replies {
+    ...RegularReply
+  }
+  textSnippet
+  createdAt
+  updatedAt
+}
+    ${RegularCreatorFragmentDoc}
+${RegularReplyFragmentDoc}`;
+export const RegularErrorFragmentDoc = gql`
+    fragment RegularError on FieldError {
+  field
+  message
 }
     `;
 export const ChangePasswordDocument = gql`
@@ -583,6 +656,23 @@ ${RegularUserFragmentDoc}`;
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const ReplyDocument = gql`
+    mutation Reply($replyInput: PostReplyInput!) {
+  reply(replyInput: $replyInput) {
+    errors {
+      ...RegularError
+    }
+    reply {
+      ...RegularReply
+    }
+  }
+}
+    ${RegularErrorFragmentDoc}
+${RegularReplyFragmentDoc}`;
+
+export function useReplyMutation() {
+  return Urql.useMutation<ReplyMutation, ReplyMutationVariables>(ReplyDocument);
 };
 export const ResponseToReceiveDocument = gql`
     mutation ResponseToReceive($inviterId: Int!, $value: Int!) {

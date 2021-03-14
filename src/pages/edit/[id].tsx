@@ -8,8 +8,8 @@ import { usePostQuery, useUpdatePostMutation } from "../../generated/graphql";
 import { useGetPostIntId } from "../../hooks/useGetPostIntId";
 import { Layout } from "../../layouts/Layout";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { postInputExamination } from "../../utils/postInputExamination";
 import { toErrorsMap } from "../../utils/toErrorsMap";
+import { postInputExamination } from "../../utils/validators";
 
 interface EditPostProps {}
 

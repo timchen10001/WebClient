@@ -1,10 +1,10 @@
 mutation Register($input: UsernameEmailPassword!) {
-    register(input: $input) {
-        errors {
-            ...RegularError
-        }
-        user {
-            ...RegularUser
-        }
+  register(input: $input) {
+    errors {
+      ...RegularError
     }
+    user {
+      ...RegularUser
+    }
+  }
 }

@@ -7,7 +7,7 @@ import { FixPageLayout } from "../layouts/FixPageLayout";
 import { InputField } from "../components/InputField";
 import { useForgetPasswordMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { emailExamination } from "../utils/emailExamination";
+import { emailExamination } from "../utils/validators";
 import { toErrorsMap } from "../utils/toErrorsMap";
 
 interface forgetPasswordProps {}

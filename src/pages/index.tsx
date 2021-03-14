@@ -1,4 +1,4 @@
-import { Button, Flex, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Button, Flex, Spinner, Stack } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import React, { useState } from "react";
 import { CustomAlertDialog } from "../components/CustomAlertDialog";
@@ -62,6 +62,7 @@ const Index = () => {
           {posts?.map((p, idx) =>
             !p ? null : (
               <RegularPost
+                key={`regular-post-${idx}`}
                 index={idx}
                 post={p}
                 device={device}
